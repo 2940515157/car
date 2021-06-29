@@ -1,0 +1,2 @@
+[{"ROLE_ID":"d561f5324cf599a722a7743cf3deac17", "NAME":"\u7ba1\u7406\u5458", "ROLE_NO":"Admin", "MEMO":"\u6700\u9ad8\u6743\u9650\u7ba1\u7406\u8005", "IS_ACTIVE":"Y", "CREATED_DATE":"", "UPDATED_DATE":"", "CREATED_BY":"", "UPDATED_BY":"", "VERSION":0.0, "ROLE_ORIGIN":"base"},
+ {"ROLE_ID":"dfc40fef99dc8d3fc3991872b06532bc", "NAME":"\u95e8\u5e97\u5e97\u957f", "ROLE_NO":"store_manager", "MEMO":"\u95e8\u5e97\u7ba1\u7406\u8005", "IS_ACTIVE":"Y", "CREATED_DATE":"", "UPDATED_DATE":"", "CREATED_BY":"", "UPDATED_BY":"", "VERSION":0.0, "ROLE_ORIGIN":"store"}]

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.hr.mapper.HrBranchesMapper">
+
+    <resultMap id="HrBranchesMap" type="com.xmz.service.hr.entity.vo.MyHrBranches">
+        <!--  省份-->
+        <result column="PROV_NAME" property="sheng"></result>
+        <!--  城市-->
+        <result column="CITY_NAME" property="shi"></result>
+        <!--  区域-->
+        <result column="AREA_NAME" property="quYu"></result>
+        <!--  大区-->
+        <result column="ORG_NAME" property="daQu"></result>
+    </resultMap>
+
+    <resultMap id="menMap" type="com.xmz.service.hr.entity.vo.MyHrBranches">
+        <result column="brTypeName" property="brTypeName"></result>
+    </resultMap>
+
+   <!-- 分页查询门店-->
+    <select id="queryAllPage" parameterType="String"  resultMap="menMap">
+        select ede1.`DICTNAME` 'brTypeName',hbc.* from hr_branches hbc
+        inner join eos_dict_entry ede1
+        on hbc.BR_TYPE=ede1.DICTID
+        <where>
+            ede1.DICTTYPEID='DICT_BR_TYPE'
+            <if test="brName != null and brName != ''">
+                AND BR_NAME LIKE CONCAT('%',#{brName},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--根据大区和区域查询出门店-->
+    <select id="queryAllMenDian" parameterType="com.xmz.service.hr.entity.pojo.HrBranches" resultType="com.xmz.service.hr.entity.pojo.HrBranches">
+        SELECT *FROM hr_branches
+        <where>
+            <if test="orgUuid !=null and orgUuid != ''">
+                AND ORG_UUID =#{orgUuid}
+            </if>
+
+            <if test="areaUuid !=null and areaUuid != ''">
+                AND AREA_UUID =#{areaUuid}
+            </if>
+
+        </where>
+
+    </select>
+
+    <select id="query" parameterType="com.xmz.service.hr.entity.vo.HrBranchesQuery" resultMap="HrBranchesMap">
+        SELECT b.*,o.ORG_NAME,a.AREA_NAME,c.CITY_NAME,p.PROV_NAME  FROM hr_branches AS b
+        LEFT JOIN base_citys AS c ON b.CITY_UUID=c.CITY_UUID
+        LEFT JOIN base_provinces p ON p.PROV_UUID=b.PROV_UUID
+        LEFT JOIN hr_area a ON a.AREA_UUID=b.AREA_UUID
+        LEFT JOIN hr_org o ON o.ORG_UUID=b.ORG_UUID
+        <where>
+            <if test="hrBrancherQuery.orgUuid !=null and hrBrancherQuery.orgUuid != ''">
+                and b.ORG_UUID =#{hrBrancherQuery.orgUuid}
+            </if>
+            <if test="hrBrancherQuery.areaUuid !=null and hrBrancherQuery.areaUuid != ''">
+                and b.AREA_UUID =#{hrBrancherQuery.areaUuid}
+            </if>
+            <if test="hrBrancherQuery.brName !=null and hrBrancherQuery.brName != ''">
+                and b.BR_NAME like concat('%', #{hrBrancherQuery.brName}, '%')
+            </if>
+            <if test="hrBrancherQuery.brCode !=null and hrBrancherQuery.brCode != ''">
+                and b.BR_CODE like concat('%', #{hrBrancherQuery.brCode}, '%')
+            </if>
+            <if test="hrBrancherQuery.brType !=null and hrBrancherQuery.brType != ''">
+                and b.BR_TYPE =#{hrBrancherQuery.brType}
+            </if>
+            <if test="hrBrancherQuery.brPhone !=null and hrBrancherQuery.brPhone != ''">
+                and b.BR_PHONE like concat('%', #{hrBrancherQuery.brPhone}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getById" parameterType="String" resultType="com.xmz.service.hr.entity.pojo.HrBranches">
+        SELECT * FROM hr_branches
+        where BR_UUID=#{brUuid}
+    </select>
+
+    <select id="getIdsByAreaIds" resultType="string" parameterType="list">
+        SELECT BR_UUID
+        FROM xmz_student.hr_branches
+        WHERE AREA_UUID IN
+            <foreach collection="areaIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </select>
+
+    <select id="list"  resultType="com.xmz.service.hr.entity.pojo.HrBranches">
+                SELECT BR_CODE,BR_NAME FROM `hr_branches`
+    </select>
+
+
+</mapper>

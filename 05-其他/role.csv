@@ -1,0 +1,3 @@
+"ROLE_ID";"NAME";"ROLE_NO";"MEMO";"IS_ACTIVE";"CREATED_DATE";"UPDATED_DATE";"CREATED_BY";"UPDATED_BY";"VERSION";"ROLE_ORIGIN"
+"d561f5324cf599a722a7743cf3deac17";"管理员";"Admin";"最高权限管理者";"Y";"";"";"";"";0.0;"base"
+"dfc40fef99dc8d3fc3991872b06532bc";"门店店长";"store_manager";"门店管理者";"Y";"";"";"";"";0.0;"store"

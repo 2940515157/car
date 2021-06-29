@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.crm.mapper.CustCustInfoMapper">
+
+
+    <select id="queryPage" resultType="com.xmz.br.crm.entity.pojo.CustCustInfo">
+        SELECT cci.*,sa.name as saname,sa2.name as saname2,hb.BR_NAME,ese.DICTNAME,ese2.DICTNAME as DICTNAME2
+        FROM cust_cust_info cci
+        left JOIN sys_account sa on cci.OWED_SA_UUID = sa.ACCOUNT_ID
+        left JOIN sys_account sa2 on cci.LAST_SA_UUID = sa2.ACCOUNT_ID
+        left JOIN hr_branches hb on cci.FIRST_SERV_BR_UUID = hb.BR_UUID
+        left JOIN eos_dict_entry ese on cci.GENDER = ese.DICTID and ese.DICTTYPEID='gender'
+        left JOIN eos_dict_entry ese2 on cci.CUST_SRC = ese2.DICTID and ese2.DICTTYPEID='DICT_CUST_FROM'
+        WHERE CUST_UUID IN(
+        SELECT CUST_UUID FROM cust_cust_sas_item WHERE BR_UUID =(
+        SELECT BR_UUID FROM hr_branches WHERE BR_CODE = #{shop} LIMIT 1))
+        <if test="qp.owedSaUuid!=null and qp.owedSaUuid!=''">and OWED_SA_UUID = #{qp.owedSaUuid}</if>
+        <if test="qp.custName!=null and qp.custName!=''">and CUST_NAME like concat('%',#{qp.custName},'%')</if>
+        <if test="qp.custPhone!=null and qp.custPhone!=''">and CUST_PHONE like concat('%',#{qp.custPhone},'%')</if>
+    </select>
+
+    <select id="queryList" resultType="com.xmz.br.crm.entity.pojo.CustCustInfo">
+        SELECT * FROM cust_cust_info WHERE CUST_UUID IN(
+        SELECT CUST_UUID FROM cust_cust_sas_item WHERE BR_UUID =(
+        SELECT BR_UUID FROM hr_branches WHERE BR_CODE = #{shop} LIMIT 1))
+        <if test="qp.owedSaUuid!=null and qp.owedSaUuid!=''">and OWED_SA_UUID = #{qp.owedSaUuid}</if>
+        <if test="qp.custName!=null and qp.custName!=''">and CUST_NAME like concat('%',#{qp.custName},'%')</if>
+        <if test="qp.custPhone!=null and qp.custPhone!=''">and CUST_PHONE like concat('%',#{qp.custPhone},'%')</if>
+    </select>
+
+    <select id="querySaInfoList" resultType="com.xmz.br.crm.entity.vo.SaInfo">
+        SELECT ACCOUNT_ID,NAME FROM sys_account where ORG_ID =(
+        SELECT BR_UUID FROM hr_branches WHERE	BR_CODE = #{shop} LIMIT 1)
+    </select>
+    <select id="queryBrUuidByShop" resultType="java.lang.String">
+        SELECT BR_UUID FROM hr_branches WHERE	BR_CODE = #{shop} LIMIT 1
+    </select>
+</mapper>

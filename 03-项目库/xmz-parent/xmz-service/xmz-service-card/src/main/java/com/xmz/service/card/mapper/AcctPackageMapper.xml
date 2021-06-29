@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctPackageMapper">
+
+    <resultMap id="acpmap" type="com.xmz.service.card.entity.vo.MyAcctPackage">
+        <!--套餐类型-->
+        <result property="apTypeName" column="apTypeName"></result>
+        <!--状态-->
+        <result property="statusName" column="statusName"></result>
+        <!--发起类型-->
+        <result property="origionTypeName" column="origionTypeName"></result>
+        <!--业务分类-->
+        <result property="bizTypeName" column="bizTypeName"></result>
+        <!--服务类型-->
+        <result property="serviceTypeName" column="serviceTypeName"></result>
+    </resultMap>
+
+    <select id="queryAllAcctPackage" resultMap="acpmap">
+        SELECT  ede1.`DICTNAME` 'apTypeName',ede2.`DICTNAME` 'statusName',ede3.`DICTNAME` 'origionTypeName',
+        ede4.`DICTNAME` 'bizTypeName',  apa.* FROM acct_package apa
+        INNER JOIN eos_dict_entry ede1 ON apa.AP_TYPE=ede1.`DICTID`
+        INNER JOIN eos_dict_entry ede2 ON apa.STATUS=ede2.`DICTID`
+        INNER JOIN eos_dict_entry ede3 ON apa.ORIGION_TYPE=ede3.`DICTID`
+        INNER JOIN eos_dict_entry ede4 ON apa.BIZ_TYPE=ede4.`DICTID`
+
+        <where>
+            ede1.DICTTYPEID='DICT_PACKAGE_TYPE'
+            AND ede2.DICTTYPEID='DICT_PRODUCT_STATUS' AND ede3.DICTTYPEID='DICT_PACKAGE_ORIGIN'
+            AND ede4.DICTTYPEID='DICT_PKG_BIZ_TYPE'
+            <if test="acpa.apName !=null and acpa.apName != ''">
+                AND apa.AP_NAME like concat('%', #{acpa.apName}, '%')
+            </if>
+
+            <if test="acpa.apType !=null and acpa.apType != ''">
+                AND apa.AP_TYPE =#{acpa.apType}
+            </if>
+
+            <if test="acpa.status !=null and acpa.status != ''">
+                AND apa.STATUS =#{acpa.status}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

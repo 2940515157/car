@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.AcctCouponDetailMapper">
+
+    <select id="serverSelectAll" resultType="com.xmz.br.vipCard.entity.pojo.CouponServerVo">
+       SELECT d.*,t.serv_Type_Name,(SELECT catalog_name FROM base_serv_catalog_back c WHERE c.catalog_uuid=d.catalog_uuid) catalog_name
+        FROM  acct_coupon_detail d
+        INNER JOIN base_serv_type t ON d.ST_UUID = t.ST_UUID
+        where d.ac_uuid = #{es.acUuid}
+    </select>
+
+
+
+</mapper>

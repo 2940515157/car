@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.CustCustInfoMapper">
+    <resultMap id="cciMap" type="com.xmz.br.vipCard.entity.pojo.MyCustCustInfo">
+        <result column="custLevel" property="custLevel"></result>
+        <result column="saname" property="saname"></result>
+    </resultMap>
+
+    <select id="queryByPhone" parameterType="com.xmz.br.vipCard.entity.vo.CustCustInfoQuery"
+            resultMap="cciMap">
+        SELECT DISTINCT car.`CAR_UUID`,
+        cci.`CUST_UUID`,
+        cci.`CUST_NAME`,
+        acc.`CARD_NO`,
+        car.LICENSE_PLATE,
+        cci.CUST_PHONE,
+        ede1.DICTNAME 'custLevel',
+        hb.`BR_NAME`,
+        sa2.name 'saname',
+        bct.BRAND,
+        bct.CAR_MODEL,
+        bct.SALE_NAME,
+        bct.CAR_YEAR
+        FROM cust_cust_info cci
+        LEFT JOIN cust_car_info car
+        ON car.CUST_UUID=cci.CUST_UUID
+        LEFT JOIN cust_cust_owner cco
+        ON cci.`CUST_UUID`=cco.`CUST_UUID`
+        LEFT JOIN sys_account sa2
+        ON sa2.`ACCOUNT_ID`=cco.`SA_UUID`
+        LEFT JOIN base_car_type bct
+        ON bct.`CAR_TYPE_UUID`=car.`CAR_TYPE_UUID`
+        LEFT JOIN hr_branches hb
+        ON cci.`OWED_BR_UUID` = hb.BR_UUID
+        LEFT JOIN eos_dict_entry ede1
+        ON cci.CUST_LEVEL=ede1.DICTID
+        LEFT JOIN acct_cust_card acc
+        ON acc.`CUST_UUID`=cci.`CUST_UUID`
+        <where>
+            ede1.DICTTYPEID='DICT_CUST_TYPE'
+            <if test="cci.custPhone !=null and cci.custPhone != ''">
+                and cci.CUST_PHONE like concat('%', #{cci.custPhone}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="pageList"
+            resultType="com.xmz.br.vipCard.entity.pojo.CustVo">
+        SELECT d.dictname statusk,d1.dictname sex,d2.dictname custLevels,c.*,info.*FROM acct_cust_card c
+        LEFT JOIN cust_cust_info info ON c.CUST_UUID=info.CUST_UUID
+        LEFT JOIN eos_dict_entry d ON d.`DICTID`= c.`STATUS`
+        LEFT JOIN eos_dict_entry d1 ON d1.`DICTID`= info.`GENDER`
+        LEFT JOIN eos_dict_entry d2 ON d2.`DICTID`= info.`CUST_LEVEL`
+        <where>
+            d.DICTTYPEID='DICT_CARD_STATUS'
+            AND d1.DICTTYPEID='COF_GENDER'
+            AND d2.DICTTYPEID='DICT_CUST_TYPE'
+            AND c.IS_ACTIVE='Y'
+            and c.BR_UUID=#{es.brUuid}
+            AND d.DICTNAME='正常'
+            <if test="es.custPhone != null and es.custPhone != '' ">
+                and info.cust_Phone like concat('%',#{es.custPhone},'%')
+            </if>
+            <if test="es.custName != null and es.custName != '' ">
+                and info.cust_Name like concat('%',#{es.custName},'%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

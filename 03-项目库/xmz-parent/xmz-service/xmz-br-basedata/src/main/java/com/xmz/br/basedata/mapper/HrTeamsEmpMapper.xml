@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.basedata.mapper.HrTeamsEmpMapper">
+
+
+
+    <select id="queryTeamUuId"   resultType="com.xmz.br.basedata.pojo.vo.MyHrTeamsEmp">
+
+        select hte.*,he.emp_code,he.emp_name,team_name from hr_teams_emp hte
+        LEFT JOIN hr_employees he ON
+        hte.`EMP_UUID` =he.`EMP_UUID`
+        LEFT JOIN hr_branche_teams hbt ON
+        hte.team_uuid=hbt.`TEAM_UUID`
+        <where>
+            hte.team_Uuid=#{id}
+            and
+            hte.is_active='Y'
+        </where>
+    </select>
+</mapper>

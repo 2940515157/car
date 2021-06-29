@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.serviceproduct.mapper.BaseServTypeMapper">
+    <select id="myPage" parameterType="com.xmz.service.serviceproduct.entity.vo.ServTypeQuery"
+            resultType="com.xmz.service.serviceproduct.entity.pojo.BaseServType">
+        SELECT * FROM base_serv_type
+        <where>
+            <if test="st.servTypeName !=null and !st.servTypeName.equals('')">
+                and base_serv_type.SERV_TYPE_NAME like concat('%', #{st.servTypeName},'%')
+            </if>
+
+        </where>
+    </select>
+
+
+    <resultMap id="menuTree" type="com.xmz.service.serviceproduct.entity.pojo.BaseServType">
+        <result column="SERV_TYPE_NAME" property="label"></result>
+    </resultMap>
+    <!--查询左边父菜单-->
+    <select id="findAllBase" resultMap="menuTree">
+        SELECT * FROM base_serv_type WHERE ISNULL(PARENT_UUID)
+    </select>
+
+    <select id="getMenuChildren" parameterType="String" resultMap="menuTree">
+    SELECT * FROM base_serv_type WHERE PARENT_UUID= #{stUuid}
+    </select>
+
+
+
+</mapper>

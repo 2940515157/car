@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctCardSetupMapper">
+
+    <resultMap id="acsmap" type="com.xmz.service.card.entity.vo.MyAcctCardSetup">
+      <!--  类型(小拇指卡等)-->
+        <result column="dictname1" property="dictname1"></result>
+      <!--  状态-->
+        <result column="dictname2" property="dictname2"></result>
+        <!--  核算人-->
+        <result column="NAME" property="name"></result>
+    </resultMap>
+
+
+    <select id="queryAllAcct" resultMap="acsmap">
+         SELECT DISTINCT  ede1.`DICTNAME` 'dictname1',ede2.`DICTNAME` 'dictname2',sys.`NAME` 'name',acs.* FROM acct_card_setup acs
+         INNER JOIN eos_dict_entry ede1
+         ON acs.ACS_TYPE=ede1.`DICTID`
+         INNER JOIN eos_dict_entry ede2
+         ON acs.STATUS=ede2.`DICTID`
+         INNER JOIN sys_account sys
+         ON acs.CHECK_UUID=sys.ACCOUNT_ID
+        <where>
+            ede2.DICTTYPEID='DICT_PRODUCT_STATUS' and
+            ede1.DICTTYPEID='DICT_CARD_COMPANY'
+
+            <if test="macs.acsName !=null and macs.acsName != ''">
+                AND acs.ACS_NAME like concat('%', #{macs.acsName}, '%')
+
+            </if>
+
+            <if test="macs.acsType !=null and macs.acsType != ''">
+                AND acs.ACS_Type =#{macs.acsType}
+            </if>
+
+            <if test="macs.status !=null and macs.status != ''">
+                AND acs.STATUS =#{macs.status}
+            </if>
+
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.basedata.mapper.BaseCarBrandMapper">
+    <select id="myPage" parameterType="com.xmz.service.basedata.entity.vo.BaseCarQuery"
+            resultType="com.xmz.service.basedata.entity.pojo.BaseCarBrand">
+        SELECT * FROM base_car_brand
+
+        <where>
+            <if test="bcq.name !=null and bcq.name != ''">
+                and base_car_brand.name like concat('%', #{bcq.name}, '%')
+            </if>
+            <if test="bcq.type != null and bcq.type != ''">
+                and base_car_brand.type like concat('%', #{bcq.type}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

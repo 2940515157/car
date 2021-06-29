@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="xmz-example-demo" />
+        <module name="xmz-br-carService" />
+        <module name="xmz-common-service-base" />
+        <module name="xmz-service-card" />
+        <module name="xmz-example-feignDemo" />
+        <module name="xmz-br-crm" />
+        <module name="xmz-service-hr" />
+        <module name="xmz-codeGenerator" />
+        <module name="xmz-service-system" />
+        <module name="xmz-br-vipcard" />
+        <module name="xmz-service-carsparts" />
+        <module name="xmz-br-basedata" />
+        <module name="xmz-gateway" />
+        <module name="xmz-common-utils" />
+        <module name="xmz-service-serviceproduct" />
+        <module name="xmz-service-basedata" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="xmz-br-basedata" target="8" />
+      <module name="xmz-br-carService" target="8" />
+      <module name="xmz-br-crm" target="8" />
+      <module name="xmz-br-storages" target="8" />
+      <module name="xmz-br-vipcard" target="1.8" />
+      <module name="xmz-codeGenerator" target="1.8" />
+      <module name="xmz-common" target="1.8" />
+      <module name="xmz-common-service-base" target="1.8" />
+      <module name="xmz-common-utils" target="1.8" />
+      <module name="xmz-example-demo" target="1.8" />
+      <module name="xmz-example-feignDemo" target="1.8" />
+      <module name="xmz-gateway" target="1.8" />
+      <module name="xmz-parent" target="1.8" />
+      <module name="xmz-service" target="1.8" />
+      <module name="xmz-service-basedata" target="1.8" />
+      <module name="xmz-service-card" target="1.8" />
+      <module name="xmz-service-carsparts" target="1.8" />
+      <module name="xmz-service-hr" target="1.8" />
+      <module name="xmz-service-serviceproduct" target="1.8" />
+      <module name="xmz-service-system" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="xmz-br-basedata" options="-parameters" />
+      <module name="xmz-br-carService" options="-parameters" />
+      <module name="xmz-br-crm" options="-parameters" />
+      <module name="xmz-br-storages" options="-parameters" />
+      <module name="xmz-br-vipcard" options="-parameters" />
+      <module name="xmz-codeGenerator" options="-parameters" />
+      <module name="xmz-common-service-base" options="-parameters" />
+      <module name="xmz-common-utils" options="-parameters" />
+      <module name="xmz-example-demo" options="-parameters" />
+      <module name="xmz-example-feignDemo" options="-parameters" />
+      <module name="xmz-gateway" options="-parameters" />
+      <module name="xmz-service-basedata" options="-parameters" />
+      <module name="xmz-service-card" options="-parameters" />
+      <module name="xmz-service-carsparts" options="-parameters" />
+      <module name="xmz-service-hr" options="-parameters" />
+      <module name="xmz-service-serviceproduct" options="-parameters" />
+      <module name="xmz-service-system" options="-parameters" />
+    </option>
+  </component>
+</project>

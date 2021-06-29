@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.BrCouponMapper">
+
+    <select id="pageList" resultType="com.xmz.br.vipCard.entity.pojo.BrCouponVo">
+        SELECT b.*,c.ac_uuid acUuid,c.AC_NAME,c.total_Price,c.replace_Price,c.composite_Flag,c.sal_Price,c.TOTAL_COUNT,c.REMAINDER,
+        c.START_DATE startDatez,c.END_DATE endDatez,c.PUT_ON_DATE putNoDatez,c.PULL_OFF_DATE pullOffDatez,d1.dictname acTypes,d2.dictname acUseTypes,d3.dictname statusz,d4.dictname statusm FROM br_coupon b
+        INNER JOIN acct_coupon c ON b.coupon_uuid=c.ac_uuid
+        INNER JOIN eos_dict_entry d1 ON d1.`DICTID`= c.ac_use_type
+        INNER JOIN eos_dict_entry d2 ON d2.`DICTID`= c.ac_type
+        INNER JOIN eos_dict_entry d3 ON d3.`DICTID`= c.status
+        INNER JOIN eos_dict_entry d4 ON d4.`DICTID`= b.status
+        <where>
+            c.IS_ACTIVE = 'Y'
+            and d1.`DICTTYPEID` = 'DICT_COUPON_USE_TYPE'
+            AND d2.`DICTTYPEID` = 'DICT_COUPON_TYPE'
+            AND d3.`DICTTYPEID` = 'DICT_PRODUCT_STATUS'
+            AND d4.`DICTTYPEID` = 'DICT_PRODUCT_STATUS'
+             <if test="es.brUuid != null and es.brUuid != ''">
+                and br_uuid = #{es.brUuid}
+            </if>
+            <if test="es.statusm != null and es.statusm != ''">
+                and b.status = #{es.statusm}
+            </if>
+            <if test="es.status != null and es.status != ''">
+                and b.status = #{es.status}
+            </if>
+            <if test="es.acUseTypes != null and es.acUseTypes != ''">
+                and c.ac_use_type = #{es.acUseTypes}
+            </if>
+            <if test="es.acName != null and es.acName != ''">
+                and c.ac_Name like concat ('%',#{es.acName},'%')
+            </if>
+            <if test="es.putStart != null">
+                and b.PUT_ON_DATE &gt;= #{es.putStart}
+            </if>
+            <if test="es.putStop != null">
+                and b.PUT_ON_DATE &lt;= #{es.putStop}
+            </if>
+            <if test="es.pullStart != null">
+                and b.PULL_OFF_DATE &gt;= #{es.pullStart}
+            </if>
+            <if test="es.pullStop != null">
+                and b.PULL_OFF_DATE &lt;= #{es.pullStop}
+            </if>
+
+
+        </where>
+    </select>
+</mapper>

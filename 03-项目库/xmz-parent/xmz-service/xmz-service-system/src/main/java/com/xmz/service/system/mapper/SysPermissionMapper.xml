@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.system.mapper.SysPermissionMapper">
+
+    <select id="listPage" resultType="com.xmz.service.system.entity.vo.SysPermissionListVo">
+        SELECT
+            res.RESOURCE_ID 'resourceId',
+            res.RESOURCE_ORIGIN 'resourceOrigin',
+            res.RESOURCE_NAME 'resourceName',
+            perm.PERMISSION_ID 'permissionId',
+            perm.OPERATION_NAME 'operationName',
+            perm.LOGIC_FLOW_NAME 'logicFlowName'
+        FROM xmz_student.sys_permission perm
+            LEFT JOIN xmz_student.sys_resource res ON perm.RESOURCE_ID = res.RESOURCE_ID
+        <where>
+            <if test="sp!=null">
+                <if test="sp.resourceName!=null and !sp.resourceName.equals('')">
+                    and res.RESOURCE_NAME LIKE CONCAT('%',#{sp.resourceName},'%')
+                </if>
+                <if test="sp.operationName!=null and !sp.operationName.equals('')">
+                    and perm.OPERATION_NAME LIKE CONCAT('%',#{sp.operationName},'%')
+                </if>
+                <if test="sp.logicFlowName!=null and !sp.logicFlowName.equals('')">
+                    and perm.logicFlowName LIKE CONCAT('%',#{sp.logicFlowName},'%')
+                </if>
+                <if test="sp.resourceOrigin!=null and !sp.resourceOrigin.equals('')">
+                    and res.RESOURCE_ORIGIN = #{sp.resourceOrigin}
+                </if>
+            </if>
+            AND perm.IS_ACTIVE = 'Y'
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.serviceproduct.mapper.ServCheckupCatalogItemMapper">
+
+    <delete id="deleteBySccUuid" parameterType="String">
+        delete from serv_checkup_catalog_item where SCC_UUID=#{sccUuid}
+    </delete>
+
+    <select id="querySccUuid" parameterType="String"
+            resultType="com.xmz.service.serviceproduct.entity.pojo.ServCheckupCatalogItem">
+        SELECT * from serv_checkup_catalog_item where SCC_UUID=#{sccUuid}
+    </select>
+</mapper>

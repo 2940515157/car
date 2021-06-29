@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctCouponMapper">
+
+    <resultMap id="acoupMap" type="com.xmz.service.card.entity.vo.MyAcctCoupon">
+        <result property="statusName" column="statusName"></result>
+        <result property="acUseTypeName" column="acUseTypeName"></result>
+        <result property="bizTypeName" column="bizTypeName"></result>
+        <result property="acTypeName" column="acTypeName"></result>
+    </resultMap>
+   <!-- 优惠券分页条件查询-->
+    <select id="queryAllACoup" resultMap="acoupMap">
+        SELECT ede1.`DICTNAME` 'statusName',ede2.`DICTNAME` 'acUseTypeName',
+        ede3.`DICTNAME` 'bizTypeName',ede4.`DICTNAME` 'acTypeName',accp.* FROM acct_coupon accp
+        INNER JOIN eos_dict_entry ede1 ON accp.STATUS=ede1.`DICTID`
+        INNER JOIN eos_dict_entry ede2 ON accp.AC_USE_TYPE=ede2.`DICTID`
+        INNER JOIN eos_dict_entry ede3 ON accp.BIZ_TYPE=ede3.`DICTID`
+        INNER JOIN eos_dict_entry ede4 ON accp.AC_TYPE=ede4.`DICTID`
+        <where>
+            ede1.DICTTYPEID='DICT_PRODUCT_STATUS'
+            AND ede2.DICTTYPEID='DICT_COUPON_USE_TYPE'
+            AND ede3.DICTTYPEID='DICT_COUPON_BIZ_TYPE'
+            AND ede4.DICTTYPEID='DICT_COUPON_TYPE'
+
+            <if test="accoup.acName !=null and accoup.acName != ''">
+                AND accp.AC_NAME like concat('%', #{accoup.acName}, '%')
+            </if>
+
+            <if test="accoup.bizType !=null and accoup.bizType != ''">
+                AND accp.BIZ_TYPE =#{accoup.bizType}
+            </if>
+
+            <if test="accoup.acUseType !=null and accoup.acUseType != ''">
+                AND accp.AC_USE_TYPE =#{accoup.acUseType}
+            </if>
+
+            <if test="accoup.status !=null and accoup.status != ''">
+                AND accp.STATUS =#{accoup.status}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="queryBrACoup" resultMap="acoupMap">
+        SELECT DISTINCT  ede1.`DICTNAME` 'statusName',ede3.`DICTNAME` 'bizTypeName',ede2.`DICTNAME` 'acUseTypeName', accp.* FROM acct_coupon accp
+        LEFT JOIN acct_coupon_area aca ON accp.AC_UUID=aca.AC_UUID
+        LEFT JOIN eos_dict_entry ede3 ON accp.BIZ_TYPE=ede3.`DICTID`
+        LEFT JOIN eos_dict_entry ede2 ON accp.AC_USE_TYPE=ede2.`DICTID`
+        LEFT JOIN eos_dict_entry ede1 ON accp.STATUS=ede1.`DICTID`
+        <where>
+            aca.PK_UUID='ff80808151f8afb801521583513201b0'
+            AND accp.END_DATE > NOW()
+            OR aca.`PK_UUID`='ff80808150d844730150dae7d4f405f7'
+            AND accp.END_DATE > NOW()
+            AND ede2.DICTTYPEID='DICT_COUPON_USE_TYPE'
+            AND ede3.DICTTYPEID='DICT_COUPON_BIZ_TYPE'
+            AND ede1.DICTTYPEID='DICT_PRODUCT_STATUS'
+            <if test="accoup.acName !=null and accoup.acName != ''">
+                AND accp.AC_NAME like concat('%', #{accoup.acName}, '%')
+            </if>
+        </where>
+        GROUP BY accp.`AC_UUID`
+    </select>
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.carService.mapper.OtherMapper">
+
+    <select id="getCustPage" resultType="com.xmz.br.carService.entity.vo.Cust">
+        SELECT cci.CUST_UUID "custUuid",
+        cari.LICENSE_PLATE "licensePlate",
+        cci.CUST_NAME "custName",
+        cci.CUST_PHONE "custPhone",
+        cci.CUST_LEVEL "custLevel",
+        bct.CAR_TYPE_UUID "carTypeUuid",
+        bct.SHOW_NAME "carName"
+        FROM xmz_student.cust_cust_info cci
+        LEFT JOIN (SELECT LICENSE_PLATE, CUST_UUID, CAR_TYPE_UUID FROM xmz_student.cust_car_info) cari
+        ON cari.CUST_UUID = cci.CUST_UUID
+        LEFT JOIN (SELECT CAR_TYPE_UUID, SHOW_NAME FROM xmz_student.base_car_type) bct
+        ON bct.CAR_TYPE_UUID = cari.CAR_TYPE_UUID
+        <where>
+            <if test="licensePlate!=null and !''.equals(licensePlate)">
+                AND cari.LICENSE_PLATE LIKE CONCAT('%',#{licensePlate},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getServBookingItems" resultType="map" parameterType="string">
+        SELECT sbi.ITEM_UUID      "itemUuid",
+               sbi.SB_UUID        "sbUuid",
+               sbi.SERV_ITEM_UUID "catalogUuid",
+               bsc.`CATALOG_NAME` "catalogName",
+               sbi.STD_MAN_HOUR   "stdManHour",
+               sbi.STD_PRICE      "stdPrice",
+               sbi.STD_SIDE_NUM   "stdSideNum",
+               sbi.STD_AMT        "stdAmt",
+               sbi.DISCOUNT       "discount",
+               sbi.PRICE          "price",
+               sbi.IS_ACTIVE      "isActive"
+        FROM xmz_student.serv_booking_item sbi
+                 LEFT JOIN (SELECT CATALOG_UUID, `CATALOG_NAME` FROM xmz_student.base_serv_catalog) bsc
+                           ON bsc.CATALOG_UUID = sbi.SERV_ITEM_UUID
+        WHERE sbi.SB_UUID = #{sbUuid}
+    </select>
+
+    <select id="getServBookingParts" resultType="map" parameterType="string">
+        SELECT sbp.SBP_UUID  "sbpUuid",
+               sbp.SB_UUID   "sbUuid",
+               sbp.PART_UUID "partUuid",
+               bcp.SHOW_NAME "showName",
+               sbp.PART_NUM  "partNum",
+               SAL_PRICE     "salPrice",
+               sbp.STD_AMT   "stdAmt",
+               sbp.DISCOUNT  "discount",
+               sbp.PRICE     "price",
+               sbp.UNIT      "unit",
+               sbp.IS_ACTIVE "isActive"
+        FROM xmz_student.serv_booking_part sbp
+                 LEFT JOIN (SELECT PART_UUID, SHOW_NAME FROM xmz_student.base_car_parts_sku) bcp
+                           ON bcp.PART_UUID = sbp.PART_UUID
+        WHERE sbp.SB_UUID = #{sbUuid}
+    </select>
+
+</mapper>

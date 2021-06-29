@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.system.mapper.SysResourceMapper">
+
+    <!--    <resultMap id="result" type="com.xmz.service.system.entity.vo.SysResourceVo">-->
+    <!--        -->
+    <!--    </resultMap>-->
+
+    <select id="queryResource" resultType="com.xmz.service.system.entity.vo.SysResourceVo">
+        SELECT
+        res.RESOURCE_ID 'resourceId',
+        res.RESOURCE_NAME 'resourceName',
+        p_res.RESOURCE_NAME 'parentName',
+        res.RESOURCE_TYPE 'resourceType',
+        res.RESOURCE_ORIGIN 'resourceOrigin',
+        res.RESOURCE_NO 'resourceNo',
+        res.URL 'url',
+        res.IMG 'img',
+        res.TREE_SEQ 'treeSeq',
+        res.IS_SHOW 'isShow',
+        (SELECT COUNT(*) FROM xmz_student.sys_resource ress WHERE PARENT_ID = res.RESOURCE_ID) > 0 'hasChildren'
+        FROM xmz_student.sys_resource res
+        LEFT JOIN xmz_student.sys_resource p_res ON res.PARENT_ID = p_res.RESOURCE_ID
+        <where>
+            <if test="resourceName!=null and !''.equals(resourceName)">
+                AND res.RESOURCE_NAME like CONCAT('%',#{resourceName},'%')
+            </if>
+            <if test="resourceOrigin!=null and !''.equals(resourceOrigin)">
+                AND res.RESOURCE_ORIGIN = #{resourceOrigin}
+            </if>
+            <if test="parentId!=null and !''.equals(parentId)">
+                AND res.PARENT_ID = #{parentId}
+            </if>
+            <if test="parentId==null or ''.equals(parentId)">
+                AND (res.PARENT_ID IS NULl OR res.PARENT_ID = "")
+            </if>
+        </where>
+        ORDER BY res.RESOURCE_ORIGIN,res.TREE_SEQ ASC
+    </select>
+
+
+    <select id="getRes" resultType="string" parameterType="string">
+        SELECT
+            res.RESOURCE_ID 'id'
+        FROM xmz_student.sys_resource res
+        WHERE
+            res.PARENT_ID = #{id}
+            OR res.RESOURCE_ID = #{id}
+    </select>
+
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.hr.mapper.SysAccountMapper">
+
+    <select id="queryAllSa" resultType="com.xmz.service.hr.entity.pojo.SysAccount">
+        select ACCOUNT_ID,NAME from sys_account
+    </select>
+
+    <select id="queryPage" resultType="map">
+        SELECT
+            `ACCOUNT_ID` "accountId",
+            `NAME` "name",
+            `LOGIN_NAME` "loginName",
+            `TYPE` "type",
+            `STATUS` "status",
+            `LAST_LOGIN_TIME` "lastLoginTime",
+            `REMARK` `remark`
+        FROM xmz_student.sys_account
+        <where>
+            <if test="aq!=null">
+                <if test="aq.name!=null and !''.equals(aq.name)">
+                    AND `NAME` LIKE CONCAT('%',#{aq.name},'%')
+                </if>
+                <if test="aq.loginName!=null and !''.equals(aq.loginName)">
+                    AND `LOGIN_NAME` CONCAT('%',#{aq.loginName},'%')
+                </if>
+                <if test="aq.empIds!=null">
+                    AND `REF_ID` IN
+                    <foreach collection="aq.empIds" item="id" open="(" separator="," close=")">
+                        #{id}
+                    </foreach>
+                </if>
+            </if>
+        </where>
+
+    </select>
+
+    <select id="infiniteList" resultType="com.xmz.service.hr.entity.vo.SysRoleGrantVo">
+        SELECT
+            `role`.ROLE_ID "roleId",
+            `role`.`NAME` "roleName",
+            `role`.`MEMO` "roleMemo",
+            `ar`.`ACCOUNT_ROLE_ID` "accountRoleId",
+            `ar`.`ACCOUNT_ID` "accountId",
+            `ar`.`IS_ACTIVE` "isActive"
+        FROM xmz_student.sys_role `role`
+            LEFT JOIN (
+                SELECT
+                    ACCOUNT_ROLE_ID,
+                    ACCOUNT_ID,
+                    ROLE_ID,
+                    IS_ACTIVE
+                FROM xmz_student.sys_account_role
+                WHERE ACCOUNT_ID = #{accountId}
+                GROUP BY ROLE_ID
+            ) ar ON ar.ROLE_ID = `role`.ROLE_ID
+        <where>
+            AND `role`.IS_ACTIVE = "Y"
+            <if test="name!=null and !name.equals('')">
+                AND `role`.`NAME` LIKE CONCAT('%',#{name},'%')
+            </if>
+        </where>
+        ORDER BY `ar`.`IS_ACTIVE` DESC
+    </select>
+
+</mapper>

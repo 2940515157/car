@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.carsparts.mapper.BaseMaintainCycleMapper">
+    <select id="queryPage" resultType="com.xmz.service.carsparts.entity.vo.CarMaintainCycle">
+        SELECT mc.*,ct.BRAND,ct.CAR_MODEL,ct.SALE_NAME,ct.SHOW_NAME,ct.CAR_YEAR,ct.DISPLACEMENT,de.dictname,de.DICTID
+        FROM base_car_type ct
+        INNER JOIN base_maintain_cycle mc
+        on mc.CAR_TYPE_UUID=ct.CAR_TYPE_UUID
+        INNER JOIN eos_dict_entry de
+        on mc.MAINTAIN_TYPE=de.DICTID
+        <where>
+            <if test="qp.brand!=null and qp.brand!=''">and ct.BRAND =#{qp.brand}</if>
+            <if test="qp.model!=null and qp.model!=''">and ct.CAR_MODEL =#{qp.model}</if>
+            <if test="qp.year!=null and qp.year!=''">and ct.CAR_YEAR =#{qp.year}</if>
+            <if test="qp.cc!=null and qp.cc!=''">and ct.DISPLACEMENT =#{qp.cc}</if>
+            <if test="qp.maintainType!=null and qp.maintainType!=''">and mc.MAINTAIN_TYPE =#{qp.maintainType}</if>
+        </where>
+    </select>
+
+    <select id="querySelect" resultType="com.xmz.service.carsparts.entity.vo.CarMaintainCycle">
+        SELECT ct.BRAND,ct.CAR_MODEL,ct.SALE_NAME,ct.CAR_YEAR,ct.DISPLACEMENT,mc.MAINTAIN_TYPE,de.dictname,de.DICTID
+        FROM base_car_type ct
+        INNER JOIN base_maintain_cycle mc
+        on mc.CAR_TYPE_UUID=ct.CAR_TYPE_UUID
+        INNER JOIN eos_dict_entry de
+        on mc.MAINTAIN_TYPE=de.DICTID
+        <if test="brand==null or brand==''">group by ct.BRAND</if>
+        <where>
+            <if test="maintainType!=null and maintainType!=''">and mc.MAINTAIN_TYPE =#{maintainType}</if>
+            <if test="brand!=null and brand!=''">and ct.BRAND =#{brand}
+                <if test="model==null or model==''">group by ct.CAR_MODEL</if>
+            </if>
+            <if test="model!=null and model!=''">and ct.CAR_MODEL = #{model}
+                <if test="year==null or year==''">group by ct.CAR_YEAR</if>
+            </if>
+            <if test="year!=null and year!=''">and ct.CAR_YEAR = #{year}
+                <if test="cc==null or cc==''">group by ct.DISPLACEMENT</if>
+            </if>
+            <if test="cc!=null and cc!=''">and ct.DISPLACEMENT =#{cc}
+                <if test="maintainType==null or maintainType==''">group by mc.MAINTAIN_TYPE</if>
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/xmz-codeGenerator/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-common/xmz-common-service-base/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-common/xmz-common-utils/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-br-basedata/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-br-carService/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-br-crm/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-br-storages/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-br-vipcard/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-example-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-example-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-example-feignDemo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-example-feignDemo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-basedata/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-basedata/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-card/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-card/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-carsparts/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-carsparts/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-hr/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-hr/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-serviceproduct/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-serviceproduct/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xmz-service/xmz-service-system/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

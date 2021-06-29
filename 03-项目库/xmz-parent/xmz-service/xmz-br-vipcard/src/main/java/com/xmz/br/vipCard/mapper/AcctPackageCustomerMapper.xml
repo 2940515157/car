@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.AcctPackageCustomerMapper">
+    <select id="myPage" parameterType="com.xmz.br.vipCard.entity.vo.AcctPackageCustomerQuery"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyAcctPackageCustomer">
+        SELECT acc.`CARD_NO`,cci.`CUST_NAME`,cci.`CUST_PHONE` ,apc.APC_NAME,
+        ede1.DICTNAME 'apType',ap.COMPOSITE_FLAG,apc.TOTAL_PRICE,ede2.DICTNAME 'apcStatus',
+        apc.USE_END_DATE,apc.VALID_MONTH ,hb.BR_NAME
+        FROM acct_package_customer apc
+        INNER JOIN cust_cust_info cci
+        ON cci.`CUST_UUID`=apc.CUSTOMER_UUID
+        INNER JOIN acct_cust_card acc
+        ON acc.`CUST_UUID`=cci.`CUST_UUID`
+        INNER JOIN eos_dict_entry ede1
+        ON apc.APC_TYPE=ede1.DICTID
+        INNER JOIN acct_package ap
+        ON ap.`AP_UUID`=apc.`ACCT_PACKAGE_UUID`
+        INNER JOIN eos_dict_entry ede2
+        ON apc.APC_STATUS=ede2.DICTID
+        INNER JOIN hr_branches hb
+        ON hb.`BR_UUID`=apc.`BR_UUID`
+        <where>
+            ede1.DICTTYPEID='DICT_PACKAGE_TYPE'
+            AND ede2.DICTTYPEID='DICT_PACKAGE_USED_STATUS'
+            <if test="apc.cardNo !=null and apc.cardNo != ''">
+                and acc.CARD_NO like concat('%', #{apc.cardNo}, '%')
+            </if>
+            <if test="apc.custName != null and apc.custName != ''">
+                and cci.`CUST_NAME` like concat('%', #{apc.custName}, '%')
+            </if>
+            <if test="apc.custPhone != null and apc.custPhone != ''">
+                and cci.CUST_PHONE like concat('%', #{apc.custPhone}, '%')
+            </if>
+            <if test="apc.apcName != null and apc.apcName != ''">
+                and apc.APC_NAME like concat('%', #{apc.apcName}, '%')
+            </if>
+            <if test="apc.apcStatus !=null and apc.apcStatus != ''">
+                and ede2.DICTNAME =#{apc.apcStatus}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryDate" parameterType="com.xmz.br.vipCard.entity.vo.AcctPackageCustomerQuery"
+            resultType="com.xmz.br.vipCard.entity.pojo.AcctPackageCustomer">
+       select * from acct_package_customer
+       where CREATED_DATE=#{apc.createdDate}
+    </select>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.basedata.mapper.BaseCarTypeMapper">
+
+    <select id="selectData" resultType="com.xmz.service.basedata.entity.pojo.BaseCarType">
+        select CAR_TYPE_UUID,BRAND,CAR_MODEL,CAR_YEAR,DISPLACEMENT,TRANSMISSION_TYPE
+        FROM base_car_type
+        <if test="brand==null or brand==''">group by BRAND</if>
+        <where>
+            <if test="cc!=null and cc!=''">and DISPLACEMENT =#{cc}</if>
+            <if test="brand!=null and brand!=''">and BRAND =#{brand}
+                <if test="model==null or model==''">group by CAR_MODEL</if>
+            </if>
+            <if test="model!=null and model!=''">and CAR_MODEL = #{model}
+                <if test="year==null or year==''">group by CAR_YEAR</if>
+            </if>
+            <if test="year!=null and year!=''">and CAR_YEAR = #{year}
+                <if test="cc==null or cc==''">group by DISPLACEMENT</if>
+            </if>
+        </where>
+    </select>
+
+    <select id="list2" resultType="com.xmz.service.basedata.entity.pojo.BaseCarType">
+         SELECT brand FROM `base_car_type` GROUP BY brand
+    </select>
+
+    <select id="list3"  resultType="com.xmz.service.basedata.entity.pojo.BaseCarType">
+            SELECT CAR_CATEGORY FROM `base_car_type` GROUP BY CAR_CATEGORY
+    </select>
+
+    <select id="list4"  resultType="com.xmz.service.basedata.entity.pojo.BaseCarType">
+            SELECT CAR_YEAR FROM `base_car_type` GROUP BY CAR_YEAR
+
+    </select>
+    <select id="list5"  resultType="com.xmz.service.basedata.entity.pojo.BaseCarType">
+            SELECT DISPLACEMENT FROM `base_car_type` GROUP BY DISPLACEMENT
+    </select>
+    <select id="list6"  resultType="com.xmz.service.basedata.entity.pojo.BaseCarType">
+                SELECT FACTORY FROM `base_car_type` GROUP BY FACTORY
+    </select>
+
+
+</mapper>

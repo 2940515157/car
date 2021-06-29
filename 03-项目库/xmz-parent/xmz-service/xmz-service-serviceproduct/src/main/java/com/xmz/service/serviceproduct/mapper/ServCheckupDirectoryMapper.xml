@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.serviceproduct.mapper.ServCheckupDirectoryMapper">
+    <resultMap id="menuTree" type="com.xmz.service.serviceproduct.entity.pojo.ServCheckupDirectory">
+        <result column="DIRECTORY_NAME" property="label"></result>
+    </resultMap>
+
+    <select id="listAll" parameterType="list"
+            resultType="com.xmz.service.serviceproduct.entity.pojo.ServCheckupDirectory">
+        SELECT *
+        FROM serv_checkup_directory
+        WHERE PARTENT_UUID!= 'null'
+    </select>
+
+    <select id="myPage" parameterType="com.xmz.service.serviceproduct.entity.vo.ServCheckQuery"
+            resultType="com.xmz.service.serviceproduct.entity.pojo.ServCheckupDirectory">
+        SELECT * FROM serv_checkup_directory
+        <where>
+            <if test="bst.directoryName !=null and !bst.directoryName.equals('')">
+                and serv_checkup_directory.DIRECTORY_NAME like concat('%', #{bst.directoryName},'%')
+            </if>
+
+        </where>
+    </select>
+
+
+    <select id="findAllTree" resultMap="menuTree">
+        SELECT * FROM serv_checkup_directory WHERE PARTENT_UUID IS NULL
+    </select>
+
+    <select id="getMenuChildren" parameterType="String" resultMap="menuTree">
+        SELECT * FROM serv_checkup_directory WHERE
+            PARTENT_UUID= #{scdUuid}
+    </select>
+</mapper>

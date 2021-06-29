@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.serviceproduct.mapper.ServCheckupPkgMapper">
+    <select id="myPage" parameterType="com.xmz.service.serviceproduct.entity.vo.ServCheckupPkgQuery"
+            resultType="com.xmz.service.serviceproduct.entity.pojo.ServCheckupPkg">
+        SELECT * from serv_checkup_pkg
+        <where>
+            <if test="scp.pkgName !=null and scp.pkgName != ''">
+                and PKG_NAME like concat ('%',#{scp.pkgName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="queryPkgName" parameterType="String"
+            resultType="com.xmz.service.serviceproduct.entity.pojo.MyServCheckupPkg">
+        select  scc.SCC_UUID,
+        scp.`SCP_UUID`,
+        scc.SCD_UUID,
+        scp.`PKG_NAME`,
+        scc.CATALOG_NAME ,
+        scd.DIRECTORY_NAME
+        from serv_checkup_pkg scp
+        inner join serv_checkup_pkg_item scp_item
+        on scp.`SCP_UUID`=scp_item.`SCP_UUID`
+        inner join serv_checkup_catalog scc
+        on scp_item.`SCC_UUID`=scc.`SCC_UUID`
+        inner join serv_checkup_directory scd
+        on scc.SCD_UUID=scd.SCD_UUID
+        where scp.PKG_NAME =#{PKG_NAME}
+
+    </select>
+
+    <select id="queryPkgName2" parameterType="String"
+            resultType="com.xmz.service.serviceproduct.entity.pojo.ServCheckupPkg">
+        SELECT * from serv_checkup_pkg where PKG_NAME=#{scp.pkgName}
+
+    </select>
+
+    <delete id="deleteScpUuid" parameterType="String">
+        delete from serv_checkup_pkg_item where SCP_UUID=#{scpUuid}
+    </delete>
+
+<!--    <update id="updateStatus" parameterType="String">-->
+<!--        update serv_checkup_pkg set STATUS=#{status} where SCP_UUID=#{scpUuid}-->
+<!--    </update>-->
+
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.storages.mapper.WmWarehouseMapper">
+    <select id="pageQuery" parameterType="com.xmz.br.storages.entity.vo.WmWarehouseQuery"
+            resultType="com.xmz.br.storages.entity.pojo.WmWarehouse">
+        SELECT b.`BR_NAME`,h.`EMP_NAME`,w.* FROM wm_warehouse w
+        INNER JOIN hr_branches b
+        ON w.`BR_UUID`=b.`BR_UUID`
+        INNER JOIN hr_employees h
+        ON b.`BR_UUID`=h.`BR_UUID`
+        <where>
+            w.IS_ACTIVE='Y'
+            <if test="query.wmWarehouseName !=null and  query.wmWarehouseName!=''">
+                and w.WM_WAREHOUSE_NAME like concat('%',#{query.wmWarehouseName},'%')
+            </if>
+            <if test="query.wmWarehouseType !=null and  query.wmWarehouseType!=''">
+                and w.WM_WAREHOUSE_TYPE=#{query.wmWarehouseType}
+            </if>
+        </where>
+    </select>
+</mapper>

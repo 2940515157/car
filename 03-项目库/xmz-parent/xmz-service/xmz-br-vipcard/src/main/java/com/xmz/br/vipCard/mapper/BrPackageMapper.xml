@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.BrPackageMapper">
+    <select id="myPage" parameterType="com.xmz.br.vipCard.entity.vo.BrPackageQuery"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyBrPackage">
+        SELECT ap.AP_UUID,bp.br_package_uuid,ap.`AP_NAME`,ap.`TOTAL_PRICE`,ede1.DICTNAME as 'apType',ede2.DICTNAME as 'origionType',
+        ede3.`DICTNAME` 'brStatus',ede4.`DICTNAME` 'status',bp.PUT_ON_DATE 'putOnDate',bp.PULL_OFF_DATE 'pullOffDate',
+        ap.SALE_RATE,ap.CAN_OWNER,ap.VALID_MONTH ,ap.START_DATE,ap.END_DATE,
+        ede5.`DICTNAME` 'bizType'
+        FROM br_package bp
+        LEFT JOIN acct_package ap
+        ON ap.AP_UUID=bp.AP_UUID
+        LEFT JOIN eos_dict_entry ede1
+        ON ap.AP_TYPE=ede1.DICTID
+        LEFT JOIN eos_dict_entry ede2
+        ON ap.ORIGION_TYPE=ede2.DICTID
+        LEFT JOIN eos_dict_entry ede3
+        ON bp.STATUS=ede3.DICTID
+        LEFT JOIN eos_dict_entry ede4
+        ON ap.STATUS=ede4.DICTID
+        LEFT JOIN eos_dict_entry ede5
+        ON ap.BIZ_TYPE=ede5.DICTID
+        <where>
+            bp.`BR_UUID`='ff80808151f8afb801521583513201b0'
+            AND ede1.DICTTYPEID='DICT_PACKAGE_TYPE'
+            AND ede2.DICTTYPEID='DICT_PACKAGE_ORIGIN'
+            AND ede3.DICTTYPEID='DICT_PRODUCT_STATUS'
+            AND ede4.DICTTYPEID='DICT_PRODUCT_STATUS'
+            AND ede5.DICTTYPEID='DICT_PKG_BIZ_TYPE'
+            <if test="bp.apName !=null and bp.apName != ''">
+                and ap.AP_NAME like concat('%', #{bp.apName}, '%')
+            </if>
+            <if test="bp.brStatus != null and bp.brStatus != ''">
+                and ede3.`DICTNAME`=#{bp.brStatus}
+            </if>
+            <if test="bp.apType !=null and bp.apType != ''">
+                and ede1.DICTNAME = #{bp.apType}
+            </if>
+        </where>
+    </select>
+
+    <select id="listQuery" parameterType="com.xmz.br.vipCard.entity.vo.BrPackageQuery"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyBrPackage">
+        SELECT ap.AP_UUID,ap.`AP_NAME`,ap.`TOTAL_PRICE`,ede1.DICTNAME as 'apType',ede2.DICTNAME as 'origionType',
+        ede3.`DICTNAME` 'brStatus',ede4.`DICTNAME` 'status',bp.PUT_ON_DATE 'putOnDate',bp.PULL_OFF_DATE 'pullOffDate',
+        ap.SALE_RATE,ap.CAN_OWNER,ap.VALID_MONTH ,ap.START_DATE,ap.END_DATE,
+        ede5.`DICTNAME` 'bizType',ap.COMPOSITE_FLAG
+        FROM br_package bp
+        LEFT JOIN acct_package ap
+        ON ap.AP_UUID=bp.AP_UUID
+        LEFT JOIN eos_dict_entry ede1
+        ON ap.AP_TYPE=ede1.DICTID
+        LEFT JOIN eos_dict_entry ede2
+        ON ap.ORIGION_TYPE=ede2.DICTID
+        LEFT JOIN eos_dict_entry ede3
+        ON bp.STATUS=ede3.DICTID
+        LEFT JOIN eos_dict_entry ede4
+        ON ap.STATUS=ede4.DICTID
+        LEFT JOIN eos_dict_entry ede5
+        ON ap.BIZ_TYPE=ede5.DICTID
+        <where>
+            bp.`BR_UUID`='ff80808151f8afb801521583513201b0'
+            AND ede3.`DICTNAME` ='上架'
+            <if test="bp.apName !=null and bp.apName != ''">
+                and ap.AP_NAME like concat('%', #{bp.apName}, '%')
+            </if>
+            AND ede1.DICTTYPEID='DICT_PACKAGE_TYPE'
+            AND ede2.DICTTYPEID='DICT_PACKAGE_ORIGIN'
+            AND ede3.DICTTYPEID='DICT_PRODUCT_STATUS'
+            AND ede4.DICTTYPEID='DICT_PRODUCT_STATUS'
+            AND ede5.DICTTYPEID='DICT_PKG_BIZ_TYPE'
+            AND ap.END_DATE	>NOW() ORDER BY ap.END_DATE
+
+        </where>
+    </select>
+
+</mapper>

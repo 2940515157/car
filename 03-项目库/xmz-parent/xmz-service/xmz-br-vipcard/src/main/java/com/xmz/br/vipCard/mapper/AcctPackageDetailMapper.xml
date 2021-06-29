@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.AcctPackageDetailMapper">
+    <select id="queryApUuid" parameterType="String"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyAcctPackageDetail">
+        SELECT DISTINCT ap.`AP_UUID`,ap.`AP_NAME`,bsc.CATALOG_NAME,bst.SERV_TYPE_NAME ,apd.APD_NUMBER ,apd.SALE_PRICE ,
+        apd.STD_PRICE,apd.STL_STD_PRICE,apd.STL_AGREEMENT_PRICE
+        FROM acct_package_detail apd
+        LEFT JOIN base_serv_catalog bsc
+        ON apd.SERV_CATALOG_UUID=bsc.CATALOG_UUID
+        LEFT JOIN base_serv_type bst
+        ON bsc.SERV_TYPE_UUID=bst.ST_UUID
+        LEFT JOIN acct_package ap
+        ON ap.`AP_UUID`=apd.AP_UUID
+        WHERE ap.AP_UUID=#{apUuid}
+    </select>
+</mapper>

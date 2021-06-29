@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.BasePkgTagDirectoryMapper">
+
+    <resultMap id="menuTree" type="com.xmz.service.card.entity.pojo.BasePkgTagDirectory">
+        <result column="DIRECTORY_NAME" property="label"></result>
+    </resultMap>
+
+   <!-- 查询左边菜单-->
+    <select id="findAllTaoCanBiaoQian" resultMap="menuTree">
+        SELECT * FROM base_pkg_tag_directory WHERE  ISNULL(PARTENT_UUID) and IS_ACTIVE='Y'
+    </select>
+
+    <!-- 查询左边菜单-->
+    <select id="getMenuChildren" parameterType="String"  resultMap="menuTree">
+        SELECT * FROM base_pkg_tag_directory WHERE
+            PARTENT_UUID= #{bptduui} and IS_ACTIVE='Y'
+    </select>
+
+    <!-- 点击左边菜单  查询出右边的数据-->
+    <select id="getMenuRight"  resultMap="menuTree">
+        SELECT * FROM base_pkg_tag_directory
+
+        <where>
+            PARTENT_UUID= #{bq.bptdUuid} and IS_ACTIVE='Y'
+            <if test="bq.label !=null and bq.label != ''">
+                and DIRECTORY_NAME like concat('%', #{bq.label}, '%')
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

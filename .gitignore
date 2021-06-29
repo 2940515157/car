@@ -1,0 +1,17 @@
+# Project exclude paths
+/03-项目库/xmz-parent/xmz-codeGenerator/target/
+/03-项目库/xmz-parent/xmz-common/xmz-common-service-base/target/
+/03-项目库/xmz-parent/xmz-common/xmz-common-utils/target/
+/03-项目库/xmz-parent/xmz-gateway/target/
+/03-项目库/xmz-parent/xmz-service/xmz-br-basedata/target/
+/03-项目库/xmz-parent/xmz-service/xmz-br-carService/target/
+/03-项目库/xmz-parent/xmz-service/xmz-br-crm/target/
+/03-项目库/xmz-parent/xmz-service/xmz-br-vipcard/target/
+/03-项目库/xmz-parent/xmz-service/xmz-example-demo/target/
+/03-项目库/xmz-parent/xmz-service/xmz-example-feignDemo/target/
+/03-项目库/xmz-parent/xmz-service/xmz-service-basedata/target/
+/03-项目库/xmz-parent/xmz-service/xmz-service-card/target/
+/03-项目库/xmz-parent/xmz-service/xmz-service-carsparts/target/
+/03-项目库/xmz-parent/xmz-service/xmz-service-hr/target/
+/03-项目库/xmz-parent/xmz-service/xmz-service-serviceproduct/target/
+/03-项目库/xmz-parent/xmz-service/xmz-service-system/target/

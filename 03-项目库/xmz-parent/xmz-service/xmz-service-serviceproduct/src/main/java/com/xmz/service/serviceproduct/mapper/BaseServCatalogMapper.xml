@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.serviceproduct.mapper.BaseServCatalogMapper">
+
+        <resultMap id="bctgMap" type="com.xmz.service.serviceproduct.entity.vo.MyBaseServCatalog">
+            <result column="servTypeName" property="servTypeName"></result>
+            <result column="topTypeName" property="topType"></result>
+            <result column="tstatType" property="tstatType"></result>
+            <result column="statMethod" property="statMethod"></result>
+        </resultMap>
+
+        <!--分页条件查询服务项目-->
+        <select id="queryAllPage" resultMap="bctgMap">
+            SELECT  bst.SERV_TYPE_NAME 'servTypeName',ede1.`DICTNAME` 'topTypeName',ede2.`DICTNAME` 'tstatType',ede3.`DICTNAME` 'statMethod', bsc.* FROM base_serv_catalog bsc
+            INNER JOIN base_serv_type bst ON bsc.SERV_TYPE_UUID=bst.ST_UUID
+            INNER JOIN eos_dict_entry ede1 ON bst.TOP_TYPE=ede1.`DICTID`
+            INNER JOIN eos_dict_entry ede2 ON bsc.STAT_TYPE=ede2.`DICTID`
+            INNER JOIN eos_dict_entry ede3 ON bsc.STAT_METHOD=ede3.`DICTID`
+            <where>
+            ede1.DICTTYPEID='DICT_SERV_TYPE' AND ede2.DICTTYPEID='DICT_STAT_TYPE'
+            AND  ede3.DICTTYPEID='DICT_STAT_METHOD' AND bsc.IS_ACTIVE='Y'
+
+                <if test="bscq.stUuid !=null and bscq.stUuid != ''">
+                    AND bsc.SERV_TYPE_UUID =#{bscq.stUuid}
+                </if>
+
+                <if test="bscq.usableFlag !=null and bscq.usableFlag != ''">
+                    AND bsc.USABLE_FLAG =#{bscq.usableFlag}
+                </if>
+
+                <if test="bscq.topType !=null and bscq.topType != ''">
+                    AND bst.TOP_TYPE =#{bscq.topType}
+                </if>
+
+                <if test="bscq.catalogName !=null and bscq.catalogName != ''">
+                    AND bsc.CATALOG_NAME like concat('%', #{bscq.catalogName}, '%')
+
+                </if>
+
+                <if test="bscq.servTypeName !=null and bscq.servTypeName != ''">
+                    AND bst.SERV_TYPE_NAME like concat('%', #{bscq.servTypeName}, '%')
+
+                </if>
+
+                <if test="bscq.isCommon !=null and bscq.isCommon != ''">
+                    AND bsc.IS_COMMON =#{bscq.isCommon}
+                </if>
+
+            </where>
+
+        </select>
+
+
+
+
+   <!-- 修改SA提成-->
+    <update id="updateCommRateSa"  parameterType="com.xmz.service.serviceproduct.entity.pojo.BaseServCatalog"  >
+        update base_serv_catalog set COMM_RATE_SA=#{commRateSa} where CATALOG_UUID=#{catalogUuid}
+    </update>
+
+   <!-- 修改技师提成-->
+    <update id="updateCommRateWorker" parameterType="com.xmz.service.serviceproduct.entity.pojo.BaseServCatalog">
+        update base_serv_catalog set COMM_RATE_WORKER=#{commRateWorker} where CATALOG_UUID=#{catalogUuid}
+    </update>
+
+
+</mapper>

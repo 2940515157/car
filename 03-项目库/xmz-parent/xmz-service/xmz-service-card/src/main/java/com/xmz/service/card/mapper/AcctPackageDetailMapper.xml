@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctPackageDetailMapper">
+    <select id="getApUuid" parameterType="String" resultType="com.xmz.service.card.entity.vo.MyAcctPackageDetail">
+        SELECT * FROM acct_package_detail apd INNER JOIN base_serv_catalog bsc ON apd.SERV_CATALOG_UUID=bsc.`CATALOG_UUID`
+                                              INNER JOIN base_serv_type bst ON bsc.SERV_TYPE_UUID=bst.ST_UUID
+        WHERE apd.AP_UUID=#{apUuid}
+    </select>
+
+</mapper>

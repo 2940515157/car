@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-br-basedata/xmz-br-basedata.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-br-basedata/xmz-br-basedata.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-br-carService/xmz-br-carService.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-br-carService/xmz-br-carService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-br-crm/xmz-br-crm.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-br-crm/xmz-br-crm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-br-storages/xmz-br-storages.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-br-storages/xmz-br-storages.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-br-vipcard/xmz-br-vipcard.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-br-vipcard/xmz-br-vipcard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-codeGenerator/xmz-codeGenerator.iml" filepath="$PROJECT_DIR$/xmz-codeGenerator/xmz-codeGenerator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-common/xmz-common.iml" filepath="$PROJECT_DIR$/xmz-common/xmz-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-common/xmz-common-service-base/xmz-common-service-base.iml" filepath="$PROJECT_DIR$/xmz-common/xmz-common-service-base/xmz-common-service-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-common/xmz-common-utils/xmz-common-utils.iml" filepath="$PROJECT_DIR$/xmz-common/xmz-common-utils/xmz-common-utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-example-demo/xmz-example-demo.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-example-demo/xmz-example-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-example-feignDemo/xmz-example-feignDemo.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-example-feignDemo/xmz-example-feignDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-gateway/xmz-gateway.iml" filepath="$PROJECT_DIR$/xmz-gateway/xmz-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-parent.iml" filepath="$PROJECT_DIR$/xmz-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-service.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-service-basedata/xmz-service-basedata.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-service-basedata/xmz-service-basedata.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-service-card/xmz-service-card.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-service-card/xmz-service-card.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-service-carsparts/xmz-service-carsparts.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-service-carsparts/xmz-service-carsparts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-service-hr/xmz-service-hr.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-service-hr/xmz-service-hr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-service-serviceproduct/xmz-service-serviceproduct.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-service-serviceproduct/xmz-service-serviceproduct.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xmz-service/xmz-service-system/xmz-service-system.iml" filepath="$PROJECT_DIR$/xmz-service/xmz-service-system/xmz-service-system.iml" />
+    </modules>
+  </component>
+</project>

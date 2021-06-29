@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.basedata.mapper.HrBranchesMapper">
+
+
+
+    <select id="queryMyHrBranches" parameterType="String" resultType="com.xmz.br.basedata.pojo.vo.MyHrBranches">
+        select hrb.*,hra.AREA_NAME,hro.ORG_NAME from hr_branches hrb
+        inner join hr_area hra
+        on hrb.AREA_UUID =hra.AREA_UUID
+        inner join hr_org hro
+        on hrb.ORG_UUID=hro.ORG_UUID
+    <where>
+        BR_CODE=#{brCode}
+    </where>
+
+    </select>
+
+
+    <select id="query" parameterType="com.xmz.br.basedata.pojo.vo.HrBranchesQuery" resultType="com.xmz.br.basedata.pojo.vo.HrBranchesPage">
+
+        SELECT hb.*,ho.`ORG_NAME`,ha.`AREA_NAME`,ede.dictname FROM hr_branches hb
+        INNER JOIN hr_org ho ON hb.ORG_UUID=ho.`ORG_UUID`
+        INNER JOIN hr_area ha ON hb.AREA_UUID=ha.`AREA_UUID`
+        INNER JOIN eos_dict_entry ede ON hb.br_type=ede.dictid
+        <where>
+            <if test="hbq.orgUuid !=null and hbq.orgUuid != ''">
+                and hb.ORG_UUID=#{hbq.orgUuid}
+            </if>
+            <if test="hbq.areaUuid != null and hbq.areaUuid != ''">
+                AND hb.AREA_UUID=#{hbq.areaUuid}
+            </if>
+            <if test="hbq.brName != null and hbq.brName != ''">
+                AND hb.BR_NAME LIKE CONCAT('%',#{hbq.brName},'%')
+            </if>
+            <if test="hbq.brCode != null and hbq.brCode != ''">
+                AND hb.BR_CODE=#{hbq.brCode}
+            </if>
+            <if test="hbq.brType != null and hbq.brType != ''">
+                AND hb.BR_TYPE=#{hbq.brType}
+            </if>
+            <if test="hbq.brPhone != null and hbq.brPhone != ''">
+                AND hb.BR_PHONE LIKE CONCAT('%',#{hbq.brPhone},'%')
+            </if>
+            AND hb.`IS_ACTIVE`='Y'
+        </where>
+
+    </select>
+
+    <select id="noPageQuery" resultType="com.xmz.br.basedata.pojo.vo.HrBranchesPage">
+        SELECT * FROM  hr_branches
+        <where>
+            BR_CODE NOT IN
+            <foreach collection="brCode" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+             AND IS_ACTIVE='Y'
+            <if test="brName != null and brName != ''">
+                AND BR_NAME LIKE CONCAT('%',#{brName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="pageQuery" resultType="com.xmz.br.basedata.pojo.vo.HrBranchesPage">
+        SELECT * FROM  hr_branches
+        <where>
+            AND IS_ACTIVE='Y'
+            <if test="brName != null and brName != ''">
+                AND BR_NAME LIKE CONCAT('%',#{brName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="queryUnAuthorizationBranches" parameterType="com.xmz.br.basedata.pojo.vo.HrBranchesQuery" resultType="com.xmz.br.basedata.pojo.vo.HrBranchesPage">
+
+        SELECT ede11.dictname,hb1.`BR_UUID`,hb1.`BR_NAME`,hb1.`BR_CODE` FROM `hr_branches` hb1
+        INNER JOIN eos_dict_entry ede11 ON hb1.BR_TYPE=ede11.dictid
+        <where>
+            hb1.`BR_UUID` NOT IN (
+            SELECT sab.`BRANCHES_ID` FROM `sys_account_branches` sab
+            WHERE sab.`ACCOUNT_ID`=#{hbq.sysAccountId})
+            AND hb1.`IS_ACTIVE`='Y'
+            AND ede11.`DICTTYPEID`='DICT_BR_TYPE'
+            <if test="hbq.orgUuid !=null and hbq.orgUuid != ''">
+                AND hb1.ORG_UUID=#{hbq.orgUuid}
+            </if>
+            <if test="hbq.areaUuid != null and hbq.areaUuid != ''">
+                AND hb1.AREA_UUID=#{hbq.areaUuid}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="queryAuthorizationBranches" parameterType="com.xmz.br.basedata.pojo.vo.HrBranchesQuery" resultType="com.xmz.br.basedata.pojo.vo.HrBranchesPage">
+
+        SELECT ede1.dictname,hb.`BR_UUID`,hb.`BR_NAME`,hb.`BR_CODE` FROM `hr_branches` hb
+        INNER JOIN `sys_account_branches` sab ON hb.`BR_UUID`=sab.`BRANCHES_ID`
+        INNER JOIN eos_dict_entry ede1 ON hb.BR_TYPE=ede1.dictid
+        WHERE
+        ede1.`DICTTYPEID`='DICT_BR_TYPE'
+        AND sab.`IS_ACTIVE`='Y'
+        AND hb.`IS_ACTIVE`='Y'
+        AND sab.`ACCOUNT_ID`=#{hbq.sysAccountId}
+
+    </select>
+
+    <!--根据大区和区域查询出门店-->
+    <select id="queryAllMenDian" parameterType="String" resultType="com.xmz.br.basedata.pojo.entity.HrBranches">
+        SELECT *FROM hr_branches where AREA_UUID =#{areaUuid}
+    </select>
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.basedata.mapper.HrEmployeesMapper">
+
+    <select id="queryBrUuidByShop" resultType="java.lang.String">
+        SELECT BR_UUID FROM hr_branches WHERE	BR_CODE = #{shop} LIMIT 1
+    </select>
+
+    <select id="query" parameterType="com.xmz.br.basedata.pojo.vo.HrEmployeesQuery" resultType="com.xmz.br.basedata.pojo.vo.HrEmployeesPage">
+
+        SELECT DISTINCT he.*,
+        hb.BR_NAME AS branches_name,
+        ede1.dictname AS emp_status_name,
+        ede2.dictname AS emp_type_name,
+        ede3.dictname AS sex,
+        ho.`ORG_NAME` AS org_name
+        FROM hr_employees he
+        INNER JOIN eos_dict_entry ede1 ON he.STATUS=ede1.dictid
+        INNER JOIN eos_dict_entry ede2 ON he.EMP_TYPE=ede2.dictid
+        INNER JOIN eos_dict_entry ede3 ON he.EMP_SEX=ede3.dictid
+        LEFT JOIN `hr_branches` hb ON he.BR_UUID=hb.br_uuid
+        LEFT JOIN `hr_org` ho ON he.`ORG_UUID`=ho.`ORG_UUID`
+        <where>
+            <if test="heq.orgId !=null and heq.orgId != ''">
+                AND hb.ORG_UUID=#{heq.orgId}
+            </if>
+            <if test="heq.areaId !=null and heq.areaId != ''">
+                AND hb.AREA_UUID=#{heq.areaId}
+            </if>
+            <if test="heq.branchesId !=null and heq.branchesId != ''">
+                AND he.BR_UUID=#{heq.branchesId}
+            </if>
+            <if test="heq.empType !=null and heq.empType != ''">
+                AND he.EMP_TYPE=#{heq.empType}
+            </if>
+            <if test="heq.empStatus !=null and heq.empStatus != ''">
+                AND he.STATUS=#{heq.empStatus}
+            </if>
+            <if test="heq.name !=null and heq.name != ''">
+                AND he.EMP_NAME LIKE CONCAT('%',#{heq.name},'%')
+            </if>
+            AND ede1.DICTTYPEID='DICT_EMP_STATUS'
+            AND ede2.DICTTYPEID='DICT_EMP_TYPE'
+            AND ede3.DICTTYPEID='COF_GENDER'
+            AND he.IS_ACTIVE='Y'
+        </where>
+
+    </select>
+
+    <select id="queryTodayCount" resultType="int">
+
+         SELECT COUNT(*) FROM hr_employees WHERE TO_DAYS(CREATED_DATE) = TO_DAYS(NOW())
+
+    </select>
+
+
+    <select id="queryBrandEmp" resultType="com.xmz.br.basedata.pojo.vo.HrEmployeesPage">
+        SELECT he.*,ede2.dictname AS emp_type_name FROM `hr_employees` he INNER JOIN eos_dict_entry ede2 ON he.EMP_TYPE=ede2.dictid
+         WHERE emp_uuid NOT IN( SELECT hte.emp_uuid FROM hr_teams_emp hte
+ LEFT JOIN hr_employees he ON
+ hte.`EMP_UUID` =he.`EMP_UUID`
+  LEFT JOIN hr_branche_teams hbt ON
+  hte.team_uuid=hbt.`TEAM_UUID`
+    WHERE
+    hte.team_Uuid=#{tid}
+    AND
+hte.is_active='Y'
+) AND br_uuid=#{bid}
+AND ede2.DICTTYPEID='DICT_EMP_TYPE'
+    </select>
+
+    <select id="queryNoAccEmps" resultType="com.xmz.br.basedata.pojo.vo.HrEmployeesPage">
+
+        SELECT DISTINCT he.*,
+        hb.BR_NAME AS branches_name
+        FROM hr_employees he
+        LEFT JOIN `hr_branches` hb ON he.BR_UUID=hb.br_uuid
+        WHERE
+        he.`EMP_UUID` NOT IN (
+        SELECT `REF_ID` FROM `sys_account`
+        WHERE
+
+        NOT ISNULL(REF_ID))
+        AND he.`IS_ACTIVE`='Y'
+        AND he.`STATUS`='jobing'
+        AND hb.IS_ACTIVE='Y'
+
+        <if test="he.name!=null and he.name!=''">
+           and EMP_Name like concat('%',#{he.name},'%')
+        </if>
+        <if test="he.branchesId!=null and he.branchesId!=''">
+            and he.BR_UUID=#{he.branchesId}
+        </if>
+    </select>
+</mapper>

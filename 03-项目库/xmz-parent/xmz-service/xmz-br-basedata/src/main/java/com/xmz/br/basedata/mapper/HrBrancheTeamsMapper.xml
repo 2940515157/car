@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.basedata.mapper.HrBrancheTeamsMapper">
+
+
+
+    <resultMap id="BaseMapper" type="com.xmz.br.basedata.pojo.vo.MyHrBrancheTeams">
+
+        <collection property="hrBrancheOrg" column="bd_uuid" javaType="HrBrancheOrg"
+         select="com.xmz.br.basedata.mapper.HrBrancheOrgMapper.selectById"
+         fetchType="lazy"></collection>
+
+    </resultMap>
+
+    <select id="queryBrancheTeams"  resultMap="BaseMapper">
+
+        SELECT team_uuid,team_name,br_uuid,bd_uuid,team_type,dictname FROM `hr_branche_teams` ht INNER JOIN eos_dict_entry ed ON ht.team_type=ed.dictid
+        <where>
+            dicttypeid='DICT_TEAMS_TYPE'
+            and br_uuid=#{hbt.brUuid}
+            AND ht.is_active='Y'
+
+            <if test="hbt.name!=null and hbt.name!=''">
+            and team_name like concat('%',#{hbt.name},'%')
+            </if>
+
+            <if test="hbt.type!=null and hbt.type!=''">
+                and team_type=#{hbt.type}
+            </if>
+
+            <if test="hbt.bdUuid!=null and hbt.bdUuid!=''">
+                and bd_uuid=#{hbt.bdUuid}
+            </if>
+
+        </where>
+    </select>
+</mapper>

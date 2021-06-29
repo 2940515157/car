@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.storages.mapper.WmWarehouseOutMapper">
+    <select id="myPage" parameterType="com.xmz.br.storages.entity.vo.WWhouseOutQuery"
+            resultType="com.xmz.br.storages.entity.pojo.WmWarehouseOut">
+
+        SELECT ww.WM_WAREHOUSE_NAME,wwo.WWO_TYPE,wwo.CREATED_BY,wwo.CREATED_DATE,wwo.FROM_TYPE,wwo.TOTAL_AMOUNT,wwo.WWO_NO,wwo.STATUS,REV_NO,CUST_NAME,LICENSE_PLATE,CUST_PHONE FROM `wm_warehouse_out` AS wwo
+        INNER JOIN wm_warehouse AS ww ON ww.WM_WAREHOUSE_UUID=wwo.WW_UUID
+        INNER JOIN serv_receive_car AS sc ON sc.REV_UUID = wwo.REV_UUID
+
+        <where>
+
+            <if test="wwo.licensePlate !=null and !wwo.licensePlate.equals('')">
+                and LICENSE_PLATE = #{wwo.licensePlate}
+            </if>
+            <if test="wwo.custName !=null and !wwo.custName.equals('')">
+                and CUST_NAME = #{wwo.custName}
+            </if>
+            <if test="wwo.revNo !=null and !wwo.revNo.equals('')">
+                and REV_NO = #{wwo.revNo}
+            </if>
+            <if test="wwo.dictid1 !=null and !wwo.dictid1.equals('')">
+                and wwo.WWO_TYPE = #{wwo.dictid1}
+            </if>
+            <if test="wwo.dictid2 !=null and !wwo.dictid2.equals('')">
+                and wwo.FROM_TYPE = #{wwo.dictid2}
+            </if>
+        </where>
+    </select>
+    <select id="listAllwwetype"
+            resultType="com.xmz.br.storages.entity.pojo.EosDictEntry">
+        SELECT DICTID as dictid1,DICTNAME as dictname FROM `eos_dict_entry`
+        WHERE DICTTYPEID= 'DICT_WMOUT_TYPE'
+    </select>
+
+    <select id="listAllfromtype"
+            resultType="com.xmz.br.storages.entity.pojo.EosDictEntry">
+        SELECT DICTID as dictid2,DICTNAME as dictname2 FROM `eos_dict_entry`
+        WHERE DICTTYPEID= 'DICT_WM_DATA_ORIGIN'
+    </select>
+</mapper>

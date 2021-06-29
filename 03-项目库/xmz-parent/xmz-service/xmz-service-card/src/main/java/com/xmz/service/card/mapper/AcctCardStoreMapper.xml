@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctCardStoreMapper">
+
+    <resultMap id="ZhiKaMap" type="com.xmz.service.card.entity.vo.MyAcctCardStored">
+        <result column="sysName" property="sysName"></result>
+        <result column="cardTypeName" property="cardTypeName"></result>
+        <result column="cardCompanyName" property="cardCompanyName"></result>
+    </resultMap>
+
+    <select id="queryAllZhiKa" resultMap="ZhiKaMap">
+        SELECT sys.NAME 'sysName',ede1.DICTNAME 'cardTypeName',ede2.DICTNAME 'cardCompanyName',acs.* FROM acct_card_store acs
+        INNER JOIN sys_account sys ON acs.SA_UUID=sys.ACCOUNT_ID
+        INNER JOIN eos_dict_entry ede1 ON acs.CARD_TYPE=ede1.DICTID
+        INNER JOIN eos_dict_entry ede2 ON acs.CARD_COMPANY=ede2.DICTID
+        <where>
+            ede1.DICTTYPEID='DICT_ACCT_CARD_TYPE' AND ede2.DICTTYPEID='DICT_CARD_COMPANY'
+
+            <if test="acctS.cardPrefix !=null and acctS.cardPrefix != ''">
+                AND acs.CARD_PREFIX like concat('%', #{acctS.cardPrefix}, '%')
+            </if>
+
+            <if test="acctS.cardNoBeg !=null and acctS.cardNoBeg != ''">
+                AND acs.CARD_NO_BEG like concat('%', #{acctS.cardNoBeg}, '%')
+            </if>
+
+            <if test="acctS.cardNoEnd !=null and acctS.cardNoEnd != ''">
+                AND acs.CARD_NO_END like concat('%', #{acctS.cardNoEnd}, '%')
+            </if>
+
+            <if test="acctS.cardType !=null and acctS.cardType != ''">
+                AND acs.CARD_TYPE =#{acctS.cardType}
+            </if>
+
+            <if test="acctS.impFlag !=null and acctS.impFlag != ''">
+                AND acs.IMP_FLAG =#{acctS.impFlag}
+            </if>
+        </where>
+
+    </select>
+
+    <update id="updateNum" parameterType="com.xmz.service.card.entity.pojo.AcctCardStore" >
+        update acct_card_store set REMAIN_CARD_NUM=REMAIN_CARD_NUM-#{remainCardNum}
+        where CARD_STORE_UUID=#{cardStoreUuid}
+    </update>
+</mapper>

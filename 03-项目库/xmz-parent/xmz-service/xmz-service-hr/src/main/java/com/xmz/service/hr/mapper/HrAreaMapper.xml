@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.hr.mapper.HrAreaMapper">
+    <select id="myPage" parameterType="com.xmz.service.hr.entity.vo.HrAreaQuery"
+            resultType="com.xmz.service.hr.entity.pojo.HrAreaPage">
+        SELECT ha.*,ho.`ORG_NAME` FROM hr_area ha
+        INNER JOIN hr_org ho ON ha.`ORG_UUID`=ho.`ORG_UUID`
+        <where>
+            <if test="haq.orgUuid != null and haq.orgUuid != ''">
+                and ha.ORG_UUID like concat('%',#{haq.orgUuid},'%')
+            </if>
+            <if test="haq.areaName != null and haq.areaName != ''">
+                and AREA_NAME like concat('%',#{haq.areaName},'%')
+            </if>
+            <if test="haq.areaCode != null and haq.areaCode != ''">
+                and AREA_CODE like concat('%',#{haq.areaCode},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="listAll"
+            resultType="com.xmz.service.hr.entity.pojo.HrOrg">
+        SELECT * FROM hr_org
+        where hr_org.IS_ACTIVE='Y'
+    </select>
+
+   <!-- 根据大区查出所有的区域-->
+    <select id="queryAllHrAreas" parameterType="String"  resultType="com.xmz.service.hr.entity.pojo.HrArea">
+        SELECT * FROM hr_area
+        <where>
+            <if test="orgUuid !=null and orgUuid != ''">
+                AND ORG_UUID =#{orgUuid}
+            </if>
+        </where>
+    </select>
+
+   <!-- 根据区域id查询出大区id-->
+    <select id="queryAllOrgUuid" parameterType="String" resultType="com.xmz.service.hr.entity.pojo.HrArea">
+        select ORG_UUID FROM hr_area where AREA_UUID=#{areaUuid}
+    </select>
+
+    <!-- 根据区域ID查询出职员ID，用于SysAccountImpl模块 -->
+    <select id="getIdsByOrgId" resultType="string" parameterType="string">
+        SELECT AREA_UUID FROM xmz_student.hr_area WHERE ORG_UUID = #{orgId}
+    </select>
+
+    <select id="queryallQuYu" parameterType="String"
+            resultType="com.xmz.service.hr.entity.pojo.HrArea">
+        SELECT * FROM hr_area
+        where
+            ORG_UUID=#{id}
+    </select>
+</mapper>

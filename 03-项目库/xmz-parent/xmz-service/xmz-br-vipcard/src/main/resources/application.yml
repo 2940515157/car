@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: brVipcard
+server:
+  port: 9011
+
+# 自定义Swagger的参数
+my-feign:
+  # 微服务的标题
+  title: 会员卡券微服务API文档
+  # 微服务的描述
+  description: 本文档描述了会员卡券微服务接口定义
+  # Feign版本
+  version: 1.0
+  # 联系方式
+  contact:
+    name: xxx
+    url: http://XXX.com
+    email: xxx@qq.com
+
+

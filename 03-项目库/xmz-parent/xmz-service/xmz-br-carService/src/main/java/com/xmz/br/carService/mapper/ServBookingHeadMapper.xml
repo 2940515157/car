@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.carService.mapper.ServBookingHeadMapper">
+
+    <select id="getVoPage" resultType="com.xmz.br.carService.entity.vo.ServBookingHeadListVo">
+        SELECT sbh.SB_UUID "sbUuid",
+               sbh.LICENSE_PLATE "licensePlate",
+               sbh.CUST_UUID "custUuid",
+               cci.CUST_NAME "custName",
+               sbh.CUST_PHONE "custPhone",
+               sbh.SA_UUID "saUuid",
+               sai.CUST_NAME "saName",
+               sbh.CREATED_DATE "createdDate",
+               sbh.BL_DATE "blDate",
+               sbh.CAR_UUID "carUuid",
+               bct.SHOW_NAME "carName",
+               sbh.`STATUS` "status",
+               sbh.SBL_NO "sblNo",
+               sbh.SBL_TYPE "sblType",
+               sbh.REMARK "remark"
+        FROM xmz_student.serv_booking_head sbh
+            LEFT JOIN (
+                SELECT CUST_UUID, CUST_NAME FROM xmz_student.cust_cust_info
+            ) cci ON cci.CUST_UUID = sbh.CUST_UUID
+             LEFT JOIN (
+                SELECT CUST_UUID, CUST_NAME FROM xmz_student.cust_cust_info
+            ) sai ON sai.CUST_UUID = sbh.SA_UUID
+             LEFT JOIN (
+                SELECT CAR_TYPE_UUID,SHOW_NAME FROM xmz_student.base_car_type
+            ) bct ON bct.CAR_TYPE_UUID = sbh.CAR_UUID
+        <where>
+            <if test="vo!=null">
+                <if test="vo.licensePlate!=null and !''.equals(vo.licensePlate)">
+                    AND sbh.LICENSE_PLATE LIKE CONCAT('',#{vo.licensePlate},'%')
+                </if>
+                <if test="vo.custPhone!=null and !''.equals(vo.custPhone)">
+                    AND sbh.CUST_PHONE = #{vo.custPhone}
+                </if>
+                <if test="vo.custName!=null and !''.equals(vo.custName)">
+                    AND cci.CUST_NAME LIKE CONCAT('',#{vo.custName},'%')
+                </if>
+                <if test="vo.sblNo!=null and !''.equals(vo.sblNo)">
+                    AND sbh.SBL_NO = ${vo.sblNo}
+                </if>
+                <if test="vo.status!=null and !''.equals(vo.status)">
+                    AND sbh.`STATUS` = ${vo.status}
+                </if>
+                <if test="vo.blDateStart!=null or vo.blDateEnd!=null">
+                    AND sbh.BL_DATE
+                        BETWEEN #{vo.blDateStart}
+                        AND <if test="''.equals(vo.blDateEnd)">NOW()</if>
+                            <if test="!''.equals(vo.blDateEnd)">#{vo.blDateEnd}</if>
+                </if>
+                <if test="vo.createTimeStart!=null or vo.createTimeEnd!=null">
+                    AND sbh.CREATED_DATE
+                        BETWEEN #{vo.createTimeStart}
+                        AND <if test="''.equals(vo.createTimeEnd)">NOW()</if>
+                            <if test="!''.equals(vo.createTimeEnd)">#{vo.createTimeEnd}</if>
+                </if>
+            </if>
+        </where>
+        ORDER BY sbh.`CREATED_DATE` desc ,sbh.`STATUS`
+    </select>
+
+</mapper>

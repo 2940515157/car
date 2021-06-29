@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctBrCardMapper">
+
+    <resultMap id="fakaMap" type="com.xmz.service.card.entity.vo.MyAcctBrCard">
+        <result column="brName" property="brName"></result>
+        <result column="empName" property="empName"></result>
+        <result column="kaShang" property="kaShang"></result>
+        <result column="stutas" property="stutas"></result>
+    </resultMap>
+
+    <select id="queryAllABrCard" resultMap="fakaMap">
+        SELECT DISTINCT hs.EMP_NAME 'empName',hb.`BR_NAME` 'brName',ede1.`DICTNAME` 'kaShang',ede2.`DICTNAME` 'stutas',abc.* FROM acct_br_card abc
+        INNER JOIN acct_card_store acs ON abc.CARD_STORE_UUID=acs.CARD_STORE_UUID
+        INNER JOIN eos_dict_entry ede1 ON abc.CARD_COMPANY=ede1.DICTID
+        INNER JOIN eos_dict_entry ede2 ON abc.BR_CARD_STATUS=ede2.DICTID
+        INNER JOIN hr_branches hb ON abc.BR_UUID=hb.BR_UUID
+        INNER JOIN hr_org ho ON hb.ORG_UUID=ho.ORG_UUID
+        INNER JOIN hr_area ha ON ha.AREA_UUID=hb.AREA_UUID
+        INNER JOIN hr_employees he ON hb.BR_UUID=he.BR_UUID
+
+        INNER JOIN hr_employees hs ON hs.EMP_UUID=abc.SA_UUID
+
+
+        <where>
+            ede1.DICTTYPEID='DICT_CARD_COMPANY'
+            AND ede2.DICTTYPEID='DICT_BR_CARD_STATUS'
+
+            <if test="abcq.orgUuid !=null and abcq.orgUuid != ''">
+                AND hb.ORG_UUID =#{abcq.orgUuid}
+            </if>
+
+            <if test="abcq.areaUuid !=null and abcq.areaUuid != ''">
+                AND hb.AREA_UUID =#{abcq.areaUuid}
+            </if>
+
+            <if test="abcq.brUuid !=null and abcq.brUuid != ''">
+                AND abc.BR_UUID =#{abcq.brUuid}
+            </if>
+
+            <if test="abcq.saUuid !=null and abcq.saUuid != ''">
+                AND abc.SA_UUID =#{abcq.saUuid}
+            </if>
+
+            <if test="abcq.impFlag !=null and abcq.impFlag != ''">
+                AND abc.IMP_FLAG =#{abcq.impFlag}
+            </if>
+
+            <if test="abcq.cardNo !=null and abcq.cardNo != ''">
+                AND abc.CARD_NO like concat('%', #{abcq.cardNo}, '%')
+
+            </if>
+
+            <if test="abcq.isExtend !=null and abcq.isExtend != ''">
+                AND abc.IS_EXTEND =#{abcq.isExtend}
+            </if>
+
+            <if test="abcq.brCardStatus !=null and abcq.brCardStatus != ''">
+                AND abc.BR_CARD_STATUS =#{abcq.brCardStatus}
+            </if>
+
+        </where>
+        order by abc.CARD_NO
+    </select>
+
+
+
+</mapper>

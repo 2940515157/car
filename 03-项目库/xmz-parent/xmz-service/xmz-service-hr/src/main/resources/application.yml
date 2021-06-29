@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: serviceHr
+server:
+  port: 8041
+
+# 自定义OpenFeign的参数
+my-feign:
+  # 微服务的标题
+  title: 人力资源（总店）微服务API文档
+  # 微服务的描述
+  description: 本文档描述了人力资源（总店）微服务接口定义
+  # Feign版本
+  version: 1.0
+  # 联系方式
+  contact:
+    name: 罗俊
+    url: http://www.KONGYU.com
+    email: kongyu111@123.com
+
+

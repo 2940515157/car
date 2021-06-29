@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.AcctPackageMapper">
+    <select id="myPage" parameterType="com.xmz.br.vipCard.entity.vo.AcctPackageQuery"
+            resultType="com.xmz.br.vipCard.entity.pojo.AcctPackage">
+        SELECT ap.`AP_NAME`,ap.TOTAL_PRICE ,
+        ap.COMPOSITE_FLAG
+        FROM acct_package ap
+        LEFT JOIN acct_package_area apa
+        ON ap.AP_UUID=apa.AP_UUID
+
+        <where>
+            apa.`PK_UUID`='ff80808150d844730150dae7d4f405f7'
+            OR apa.`PK_UUID`='ff80808151f8afb801521583513201b0'
+            <if test="ap.apName !=null and ap.apName != ''">
+                and ap.`AP_NAME` like concat('%', #{ap.apName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="queryName" parameterType="String"
+            resultType="com.xmz.br.vipCard.entity.pojo.AcctPackage">
+       select * from acct_package where AP_NAME=#{name}
+    </select>
+</mapper>

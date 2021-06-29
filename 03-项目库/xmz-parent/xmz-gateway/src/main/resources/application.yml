@@ -1,0 +1,92 @@
+server:
+  port: 9520
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        # Example_Demo
+        - id: exampleDemo
+          uri: lb://exampleDemo
+          predicates:
+            - Path=/api/exampleDemo/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # service_Basedata
+        - id: serviceBasedata
+          uri: lb://serviceBasedata
+          predicates:
+            - Path=/api/serviceBasedata/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # service_Card
+        - id: serviceCard
+          uri: lb://serviceCard
+          predicates:
+            - Path=/api/serviceCard/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # service_Carsparts
+        - id: serviceCarsparts
+          uri: lb://serviceCarsparts
+          predicates:
+            - Path=/api/serviceCarsparts/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # service_Hr
+        - id: serviceHr
+          uri: lb://serviceHr
+          predicates:
+            - Path=/api/serviceHr/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # service_Security
+        - id: serviceSecurity
+          uri: lb://serviceSecurity
+          predicates:
+            - Path=/api/serviceSecurity/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # service_ServiceProduct
+        - id: serviceServiceProduct
+          uri: lb://serviceServiceProduct
+          predicates:
+            - Path=/api/serviceServiceProduct/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # service_System
+        - id: serviceSystem
+          uri: lb://serviceSystem
+          predicates:
+            - Path=/api/serviceSystem/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # br_crm
+        - id: brCrm
+          uri: lb://brCrm
+          predicates:
+            - Path=/api/brCrm/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # hrmanagementservice
+        - id: hrmanagementservice
+          uri: lb://hrmanagementservice
+          predicates:
+            - Path=/api/hrmanagementservice/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # br_vipcard
+        - id: brVipcard
+          uri: lb://brVipcard
+          predicates:
+            - Path=/api/brVipcard/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}
+        # br_CarService
+        - id: brCarService
+          uri: lb://brCarService
+          predicates:
+            - Path=/api/brCarService/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*),$\{segment}

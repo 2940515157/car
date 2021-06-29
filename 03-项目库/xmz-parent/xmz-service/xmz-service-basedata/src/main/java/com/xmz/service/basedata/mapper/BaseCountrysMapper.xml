@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.basedata.mapper.BaseCountrysMapper">
+    <resultMap id="countryMap" type="com.xmz.service.basedata.entity.pojo.BaseCountrys">
+        <id property="countryUuid" column="countryUuid"></id>
+        <association property="CountryList" javaType="list"
+                     column="countryUuid" select="com.xmz.service.basedata.mapper.BaseProvincesMapper.selectById">
+
+        </association>
+    </resultMap>
+</mapper>

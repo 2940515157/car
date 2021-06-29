@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.storages.mapper.WmWarehouseEnterMapper">
+    <select id="myPage" parameterType="com.xmz.br.storages.entity.vo.WWhouseEnterQuery"
+            resultType="com.xmz.br.storages.entity.pojo.WmWarehouseEnter">
+
+        SELECT wwe.WWE_NO,ww.WM_WAREHOUSE_NAME,wwe.CREATED_DATE,wwe.CREATED_BY,wwe.STATUS,WWE_TYPE,FROM_TYPE,wwe.STATUS FROM wm_warehouse_enter AS wwe
+        LEFT JOIN wm_warehouse AS ww ON ww.WM_WAREHOUSE_UUID=wwe.WW_UUID
+
+        <where>
+
+            <if test="wwe.wweNo !=null and !wwe.wweNo.equals('')">
+                and wwe.WWE_NO = #{wwe.wweNo}
+            </if>
+            <if test="wwe.wmWarehouseName !=null and !wwe.wmWarehouseName.equals('')">
+                and ww.WM_WAREHOUSE_NAME = #{wwe.wmWarehouseName}
+            </if>
+            <if test="wwe.dictid1 !=null and !wwe.dictid1.equals('')">
+                and wwe.WWE_TYPE = #{wwe.dictid1}
+            </if>
+            <if test="wwe.dictid2 !=null and !wwe.dictid2.equals('')">
+                and wwe.FROM_TYPE = #{wwe.dictid2}
+            </if>
+        </where>
+    </select>
+
+    <select id="listAll"
+            resultType="com.xmz.br.storages.entity.pojo.WmWarehouse">
+        select WM_WAREHOUSE_UUID,WM_WAREHOUSE_NAME from wm_warehouse
+    </select>
+
+    <select id="listAllwwetype"
+            resultType="com.xmz.br.storages.entity.pojo.EosDictEntry">
+        SELECT DICTID as dictid1,DICTNAME as dictname FROM `eos_dict_entry`
+        WHERE DICTTYPEID= 'DICT_EB_EWE_TYPE'
+    </select>
+
+    <select id="listAllfromtype"
+            resultType="com.xmz.br.storages.entity.pojo.EosDictEntry">
+        SELECT DICTID as dictid2,DICTNAME as dictname2 FROM `eos_dict_entry`
+        WHERE DICTTYPEID= 'DICT_OUT_IN_FROM_TYPE'
+    </select>
+</mapper>

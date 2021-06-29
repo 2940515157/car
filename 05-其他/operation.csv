@@ -1,0 +1,5 @@
+"OPERATION_ID";"NAME";"TYPE";"RESOURCE_ID";"MEMO";"SEQ_NO";"OPERATION_NO";"IS_AUDIT";"IS_ACTIVE";"CREATED_DATE";"UPDATED_DATE";"CREATED_BY";"UPDATED_BY";"VERSION";"EXT1";"EXT2"
+"109732f5f55fdc92d698de56b2d56c97";"查询";"";"";"进行查询操作";4.0;"op_search";"";"Y";"";"";"";"";0.0;"";""
+"46f6c112e8c03fc85ce0380a1185b99d";"增加";"";"";"进行增加操作";1.0;"op_add";"";"Y";"";"";"";"";0.0;"";""
+"944961716df39775cb3944721ae8435f";"修改";"";"";"进行更新操作";2.0;"op_update";"";"Y";"";"";"";"";0.0;"";""
+"d054f8c3aa374492782da653b383c1e2";"删除";"";"";"进行删除操作";3.0;"op_remove";"";"Y";"";"";"";"";0.0;"";""

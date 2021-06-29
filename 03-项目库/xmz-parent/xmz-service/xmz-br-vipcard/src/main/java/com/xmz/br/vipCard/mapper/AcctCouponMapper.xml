@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.AcctCouponMapper">
+
+
+    <select id="pageList" resultType="com.xmz.br.vipCard.entity.pojo.CouponVo">
+        SELECT c.*,d.dictname biz_types,d1.dictname ac_use_types,d2.dictname ac_types,d3.dictname STATUSs FROM acct_coupon c
+        INNER JOIN eos_dict_entry d  ON d.`DICTID`= c.biz_type
+        INNER JOIN eos_dict_entry d1  ON d1.`DICTID`= c.ac_use_type
+        INNER JOIN eos_dict_entry d2  ON d2.`DICTID`= c.ac_type
+        INNER JOIN eos_dict_entry d3 ON d3.`DICTID`= c.status
+        <where>
+            c.IS_ACTIVE = 'Y'
+            and d.`DICTTYPEID`='DICT_COUPON_BIZ_TYPE'
+            AND d1.`DICTTYPEID` = 'DICT_COUPON_USE_TYPE'
+            AND d2.`DICTTYPEID` = 'DICT_COUPON_TYPE'
+            AND d3.`DICTTYPEID` = 'DICT_PRODUCT_STATUS'
+            <if test="es.acName!=null and es.acName!=''">
+                and c.ac_name like concat ('%',#{es.acName},'%')
+            </if>
+            <if test="es.bizType!=null and es.bizType!=''">
+                and c.biz_type = #{es.bizType}
+            </if>
+            <if test="es.acUseType!=null and es.acUseType!=''">
+                and c.ac_Use_Type = #{es.acUseType}
+            </if>
+            <if test="es.status!=null  and es.status!=''">
+                and c.status = #{es.status}
+            </if>
+        </where>
+
+    </select>
+
+    <update id="updateNum">
+        UPDATE acct_coupon SET REMAINDER=REMAINDER-#{ac.remainder} WHERE AC_UUID=#{ac.acUuid}
+    </update>
+
+    <select id="myPage" parameterType="com.xmz.br.vipCard.entity.vo.AcctCouponBuyRecordPojoQuery"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyAcctCouponBuyRecordPojo">
+        SELECT DISTINCT ac.`AC_NAME`,ac.`AC_NUMBER`,ac.TOTAL_PRICE,cci.`CUST_NAME`,cci.`CUST_PHONE`,car.`LICENSE_PLATE`,acbr.USE_DATE,abaa.REF_CODE,
+        ede1.`DICTNAME` 'bizRefType'
+        FROM acct_coupon_buy_record acbr
+        LEFT JOIN acct_coupon ac
+        ON acbr.AC_UUID=ac.AC_UUID
+        LEFT JOIN cust_cust_info cci
+        ON acbr.CUST_UUID=cci.`CUST_UUID`
+        LEFT JOIN cust_car_info car
+        ON car.`CUST_UUID`=cci.`CUST_UUID`
+        LEFT JOIN acct_br_ar_ap_items abaa
+        ON abaa.CUST_UUID=acbr.CUST_UUID
+        LEFT JOIN eos_dict_entry ede1 ON abaa.BIZ_REF_TYPE=ede1.`DICTID`
+        <where>
+            ede1.DICTTYPEID='DICT_AR_AP_BIZ_REF_TYPE'
+            AND acbr.BR_UUID='ff80808151f8afb801521583513201b0'
+            <if test="acbr.custName !=null and acbr.custName != ''">
+                and cci.`CUST_NAME` like concat('%', #{acbr.custName}, '%')
+            </if>
+            <if test="acbr.acName != null and acbr.acName != ''">
+                and ac.`AC_NAME` like concat('%', #{acbr.acName}, '%')
+            </if>
+            <if test="acbr.custPhone !=null and acbr.custPhone != ''">
+                and cci.`CUST_PHONE` like concat('%', #{acbr.custPhone}, '%')
+            </if>
+            <if test="acbr.licensePlate !=null and acbr.licensePlate != ''">
+                and car.`LICENSE_PLATE` like concat('%', #{acbr.licensePlate}, '%')
+            </if>
+        </where>
+        GROUP BY AC_NUMBER
+    </select>
+
+
+    <select id="myPage2" parameterType="com.xmz.br.vipCard.entity.vo.AcctCouponBuyRecordPojoQuery"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyAcbrStatus">
+        SELECT ac.AC_UUID, ac.`AC_NAME`,ede1.`DICTNAME` 'acType',ede2.`DICTNAME` 'acUsrType',
+        ac.TOTAL_COUNT,ac.REMAINDER,ac.START_DATE,ac.END_DATE,ac.PUT_ON_DATE,
+        (SELECT COUNT(`status`) FROM acct_coupon_buy_record acbr WHERE acbr.AC_UUID = ac.AC_UUID AND acbr.`status` = 'attorn') "attorn",
+        (SELECT COUNT(`status`) FROM acct_coupon_buy_record acbr WHERE acbr.AC_UUID = ac.AC_UUID AND acbr.`status` = 'normal') "normal",
+        (SELECT COUNT(`status`) FROM acct_coupon_buy_record acbr WHERE acbr.AC_UUID = ac.AC_UUID AND acbr.`status` = 'used') "used",
+        (SELECT COUNT(`status`) FROM acct_coupon_buy_record acbr WHERE acbr.AC_UUID = ac.AC_UUID AND acbr.`status` = 'expired') "expired"
+        FROM acct_coupon ac
+        LEFT JOIN eos_dict_entry ede1 ON ac.AC_TYPE=ede1.`DICTID`
+        LEFT JOIN eos_dict_entry ede2 ON ac.AC_USE_TYPE=ede2.`DICTID`
+        <where>
+            ede1.DICTTYPEID='DICT_COUPON_TYPE'
+            AND ede2.DICTTYPEID='DICT_COUPON_USE_TYPE'
+            <if test="acbr.acName != null and acbr.acName != ''">
+                and ac.`AC_NAME` like concat('%', #{acbr.acName}, '%')
+            </if>
+        </where>
+
+    </select>
+
+    <select id="queryAll"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyAcbrStatus">
+        SELECT ac.ac_uuid,ac.ac_name FROM acct_coupon_buy_record acbr
+        LEFT JOIN acct_coupon ac
+        ON acbr.AC_UUID=ac.AC_UUID
+        WHERE acbr.br_uuid='ff80808151f8afb801521583513201b0'
+        AND acbr.status='normal'
+        GROUP BY ac.ac_name
+    </select>
+
+    <select id="queryNormal" parameterType="String"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyAcbrStatus">
+        SELECT ac.AC_UUID,ac.ac_name,COUNT(ac.ac_name) 'num' FROM acct_coupon_buy_record acbr
+        LEFT JOIN acct_coupon ac
+        ON acbr.AC_UUID=ac.AC_UUID
+        WHERE acbr.br_uuid='ff80808151f8afb801521583513201b0'
+        and ac.AC_UUID=#{acUuid}
+        AND acbr.status='normal'
+
+        GROUP BY ac.ac_name
+    </select>
+
+</mapper>

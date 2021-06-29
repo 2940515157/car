@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.basedata.mapper.BaseCarCategoryMapper">
+    <select id="myPage" parameterType="com.xmz.service.basedata.entity.vo.BaseCarCategoryQuery"
+            resultType="com.xmz.service.basedata.entity.pojo.BaseCarCategoryAll">
+        SELECT a.*,b.name as bname,c.name as fname FROM base_car_category a
+        LEFT JOIN base_car_brand b ON a.`BRAND_UUID`=b.`BRAND_UUID`
+        LEFT JOIN base_car_factory c ON a.FACTORY_UUID=c.FACTORY_UUID
+        <where>
+            <if test="bcc.name !=null and bcc.name != ''">
+                and a.NAME like concat('%', #{bcc.name}, '%')
+            </if>
+            <if test="bcc.brandUuid != null and bcc.brandUuid != ''">
+                and a.BRAND_UUID like concat('%', #{bcc.brandUuid}, '%')
+            </if>
+            <if test="bcc.factoryUuid != null and bcc.factoryUuid != ''">
+                and a.FACTORY_UUID like concat('%', #{bcc.factoryUuid}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

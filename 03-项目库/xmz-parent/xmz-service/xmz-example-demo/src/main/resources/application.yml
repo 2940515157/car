@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: exampleDemo
+server:
+  port: 10086
+
+# 自定义Swagger的参数
+my-feign:
+  # 微服务的标题
+  title: Demo微服务API文档
+  # 微服务的描述
+  description: 本文档描述了Demo微服务接口定义
+  # Feign版本
+  version: 1.0
+  # 联系方式
+  contact:
+    name: xxx
+    url: http://XXX.com
+    email: xxx@qq.com
+
+

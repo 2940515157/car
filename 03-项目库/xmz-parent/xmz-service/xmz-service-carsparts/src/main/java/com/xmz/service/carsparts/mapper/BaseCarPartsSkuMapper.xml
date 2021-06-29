@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.carsparts.mapper.BaseCarPartsSkuMapper">
+    <resultMap id="BaseCarPartsSkuMap" type="com.xmz.service.carsparts.entity.vo.MyBaseCarPartsSku">
+        <!--  配件目录-->
+        <result column="NAME" property="bptNAME"></result>
+        <!--  门店编码-->
+        <result column="BR_CODE" property="hbBRCODE"></result>
+        <!--  门店名字-->
+        <result column="BR_NAME" property="hbBRNAME"></result>
+
+    </resultMap>
+
+    <select id="queryQuery" parameterType="com.xmz.service.carsparts.entity.vo.BaseCarPartsSkuQuery" resultMap="BaseCarPartsSkuMap">
+        SELECT bcps.*,bpt.NAME,hb.BR_CODE,hb.BR_NAME FROM base_car_parts_sku AS bcps
+        INNER JOIN base_parts_type AS bpt ON bpt.PART_TYPE_UUID=bcps.PART_TYPE
+        left JOIN hr_branches AS hb ON hb.BR_UUID=bcps.BR_UUID
+        <where>
+            <if test="bcpsq.partType !=null and bcpsq.partType != ''">
+                and bcps.PART_TYPE =#{bcpsq.partType}
+            </if>
+            <if test="bcpsq.showName !=null and bcpsq.showName != ''">
+                and bcps.SHOW_NAME like concat('%', #{bcpsq.showName} ,'%')
+            </if>
+            <if test="bcpsq.partNo !=null and bcpsq.partNo != ''">
+                and bcps.PART_NO like concat('%', #{bcpsq.partNo} ,'%')
+            </if>
+            <if test="bcpsq.matchType !=null and bcpsq.matchType != ''">
+                and bcps.matchType =#{bcpsq.matchType}
+            </if>
+            <if test="bcpsq.usableFlag !=null and bcpsq.usableFlag != ''">
+                and bcps.USABLE_FLAG =#{bcpsq.usableFlag}
+            </if>
+            <if test="bcpsq.brand !=null and bcpsq.brand != ''">
+                and bcps.BRAND =#{bcpsq.brand}
+            </if>
+            <if test="bcpsq.model !=null and bcpsq.model != ''">
+                and bcps.MODEL like concat('%',#{bcpsq.model} ,'%')
+            </if>
+            <if test="bcpsq.spec !=null and bcpsq.spec != ''">
+                and bcps.SPEC like concat('%',#{bcpsq.spec} ,'%')
+            </if>
+            <if test="bcpsq.brUuid !=null and bcpsq.brUuid != ''">
+                and bcps.BR_UUID!=''
+            </if>
+        </where>
+
+    </select>
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.basedata.mapper.HrOrgMapper">
+
+    <select id="query" parameterType="com.xmz.br.basedata.pojo.vo.HrOrgQuery" resultType="com.xmz.br.basedata.pojo.vo.HrOrgPage">
+        SELECT * FROM hr_org
+        <where>
+            <if test="hoq.orgName != null and hoq.orgName != '' ">
+                and org_name LIKE CONCAT('%',#{hoq.orgName},'%')
+            </if>
+            <if test="hoq.orgNo != null and hoq.orgNo != '' ">
+                AND org_no=#{hoq.orgNo}
+            </if>
+            <if test="hoq.isDisabled != null and hoq.isDisabled != '' ">
+                AND is_disabled=#{hoq.isDisabled}
+            </if>
+            AND IS_BIG_AREA='N'
+            and `IS_ACTIVE`='Y'
+        </where>
+    </select>
+
+    <select id="queryMinOrg" parameterType="com.xmz.br.basedata.pojo.vo.HrOrgQuery" resultType="integer">
+        SELECT MIN(LEVEL) FROM hr_org
+        <where>
+            <if test="hoq.orgName != null and hoq.orgName != '' ">
+                and org_name LIKE CONCAT('%',#{hoq.orgName},'%')
+            </if>
+            <if test="hoq.orgNo != null and hoq.orgNo != '' ">
+                AND org_no=#{hoq.orgNo}
+            </if>
+            <if test="hoq.isDisabled != null and hoq.isDisabled != '' ">
+                AND is_disabled=#{hoq.isDisabled}
+            </if>
+            AND IS_BIG_AREA='N'
+            and `IS_ACTIVE`='Y'
+        </where>
+    </select>
+
+    <select id="queryParentNameByParentId" parameterType="string" resultType="string">
+        SELECT `ORG_NAME` AS parentName FROM hr_org
+        WHERE
+        `ORG_UUID`=#{parentId}
+    </select>
+
+    <select id="queryOrgById" parameterType="string" resultType="com.xmz.br.basedata.pojo.vo.HrOrgPage">
+        SELECT h2.*,h1.`ORG_NAME` AS parentName FROM hr_org h1
+        INNER JOIN hr_org h2 ON h1.`ORG_UUID` = h2.`PARENT_UUID`
+        WHERE
+        h2.ORG_UUID=#{orgUuid}
+    </select>
+    <select id="noPageQuery" resultType="com.xmz.br.basedata.pojo.entity.HrOrg" parameterType="java.util.Arrays">
+        SELECT * FROM  hr_org where ORG_NO NOT IN
+        <foreach collection="orgNo" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+            AND IS_ACTIVE='Y' AND IS_BIG_AREA='Y' AND IS_DISABLED='N'
+    </select>
+
+</mapper>

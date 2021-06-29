@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.basedata.mapper.HrAreaMapper">
+
+    <select id="query" parameterType="com.xmz.br.basedata.pojo.vo.HrAreaQuery" resultType="com.xmz.br.basedata.pojo.vo.HrAreaPage">
+
+        SELECT ha.*,ho.`ORG_NAME` FROM hr_area ha
+        INNER JOIN hr_org ho
+        ON ha.`ORG_UUID`=ho.`ORG_UUID`
+        <where>
+            <if test="haq.orgUuid !=null and haq.orgUuid != ''">
+                AND ha.`ORG_UUID`=#{haq.orgUuid}
+            </if>
+            <if test="haq.areaName != null and haq.areaName != ''">
+                AND ha.`AREA_NAME` LIKE CONCAT('%',#{haq.areaName},'%')
+            </if>
+            <if test="haq.areaCode != null and haq.areaCode != ''">
+                AND ha.`AREA_CODE`=#{haq.areaCode}
+            </if>
+            AND ha.`IS_ACTIVE`='Y'
+        </where>
+
+    </select>
+
+    <!-- 根据大区查出所有的区域-->
+    <select id="queryAllHrAreas" parameterType="String" resultType="com.xmz.br.basedata.pojo.entity.HrArea">
+        SELECT * FROM hr_area where ORG_UUID =#{orgUuid}
+    </select>
+
+    <!-- 根据区域id查询出大区id-->
+    <select id="queryAllOrgUuid" parameterType="String" resultType="com.xmz.br.basedata.pojo.entity.HrArea">
+        select ORG_UUID FROM hr_area where AREA_UUID=#{areaUuid}
+    </select>
+
+</mapper>

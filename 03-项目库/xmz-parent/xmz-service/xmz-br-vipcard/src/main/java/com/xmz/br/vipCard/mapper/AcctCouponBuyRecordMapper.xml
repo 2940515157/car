@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.AcctCouponBuyRecordMapper">
+
+    <update id="updateNum">
+        UPDATE acct_coupon SET REMAINDER=REMAINDER-#{ac.remainder} WHERE AC_UUID=#{ac.acUuid}
+    </update>
+
+    <select id="selectCouPonById" resultType="com.xmz.br.vipCard.entity.pojo.AcctCouponPojo">
+        select * from acct_coupon where AC_UUID=#{acUuid}
+    </select>
+
+    <select id="pageList" resultType="com.xmz.br.vipCard.entity.pojo.RecordVo">
+        SELECT sa.name 'name',cou.ac_use_Type,cou.TOTAL_COUNT,cou.remainder,d.dictname statusm,cou.ac_name,info.CUST_PHONE,info.CUST_NAME,rec.* FROM acct_coupon_buy_record rec
+        LEFT JOIN acct_coupon cou ON cou.ac_uuid=rec.ac_uuid
+        LEFT JOIN cust_cust_info info ON info.CUST_UUID = rec.CUST_UUID
+        LEFT JOIN eos_dict_entry d ON d.`DICTID`= rec.`STATUS`
+        LEFT JOIN sys_account sa ON sa.account_id=rec.sa_uuid
+        <where>
+            rec.IS_ACTIVE='Y'
+            and d.DICTTYPEID='DICT_COUPON_BUY_STATUS'
+            <if test="es.brUuid != null">
+                AND rec.BR_UUID=#{es.brUuid}
+            </if>
+            <if test="es.custName != null and es.custName != ''">
+                AND info.cust_Name like concat('%',#{es.custName},'%')
+            </if>
+            <if test="es.status != null  and es.status != ''">
+                AND rec.status=#{es.status}
+            </if>
+            <if test="es.acName != null and es.acName != ''">
+                AND cou.ac_Name like concat('%',#{es.acName},'%')
+            </if>
+            <if test="es.acNumber != null and es.acNumber != ''">
+                AND rec.AC_NUMBER like concat('%',#{es.acNumber},'%')
+            </if>
+
+        </where>
+    </select>
+
+    <select id="queryList" parameterType="String"
+            resultType="com.xmz.br.vipCard.entity.pojo.RecordVo">
+        SELECT ac.AC_UUID,ACBR_UUID,ac.ac_name FROM acct_coupon_buy_record acbr
+        LEFT JOIN acct_coupon ac
+        ON acbr.AC_UUID=ac.AC_UUID
+        WHERE  acbr.status='normal'
+        AND ac.ac_uuid=#{acUuid}
+    </select>
+
+</mapper>

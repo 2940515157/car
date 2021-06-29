@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.AcctPackagePartsDetailMapper">
+    <select id="list" resultType="com.xmz.br.vipCard.entity.pojo.MyAcctPackagePartsDetail">
+        SELECT bpt.NAME 'name',bcps.SHOW_NAME 'showName',bcps.BRAND 'brand',bcps.MODEL 'model',appd.APP_NUMBER,appd.UNIT,appd.STL_AGREEMENT_PRICE,appd.STD_PRICE,appd.COMMISSION_RATE_SA
+	    FROM base_car_parts_sku AS bcps
+        LEFT JOIN base_parts_type AS bpt ON bpt.PART_TYPE_UUID=bcps.PART_TYPE
+        LEFT JOIN acct_package_parts_detail appd ON appd.PART_UUID=bcps.PART_UUID
+        WHERE appd.AP_UUID=#{apUuid}
+    </select>
+</mapper>

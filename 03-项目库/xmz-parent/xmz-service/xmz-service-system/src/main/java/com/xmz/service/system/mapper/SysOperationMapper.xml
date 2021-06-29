@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.system.mapper.SysOperationMapper">
+
+    <select id="infiniteList" resultType="com.xmz.service.system.entity.vo.SysOperationInfiniteListVo">
+        SELECT
+            op.`OPERATION_ID` `operationId`,
+            op.`NAME` `name`,
+            op.`OPERATION_NO` `operationNo`,
+            perm.`PERMISSION_ID` `permissionId`,
+            perm.`LOGIC_FLOW_NAME` `logicFlowName`,
+            perm.`IS_ACTIVE` `isActive`
+        FROM xmz_student.sys_operation op
+            LEFT JOIN (
+                SELECT * FROM xmz_student.sys_permission perm WHERE perm.RESOURCE_ID=#{resourceId}
+            ) perm ON  op.OPERATION_ID = perm.OPERATION_ID
+        <where>
+            AND op.IS_ACTIVE = 'Y'
+            <if test="name!=null and !name.equals('')">
+                AND op.`NAME` LIKE CONCAT('%',#{name},'%')
+            </if>
+        </where>
+        ORDER BY perm.`IS_ACTIVE` DESC
+    </select>
+
+
+</mapper>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.AcctCustCardMapper">
+    <resultMap id="accMap" type="com.xmz.br.vipCard.entity.pojo.MyAcctCustCard">
+        <result column="cardType" property="cardType"></result>
+        <result column="status" property="status"></result>
+    </resultMap>
+    <select id="myPage" parameterType="com.xmz.br.vipCard.entity.vo.AcctCustCardQuery"
+           resultMap="accMap">
+        SELECT DISTINCT cci.`CUST_UUID`,sa.ACCOUNT_ID,sa2.ACCOUNT_ID AS ACCOUNT_ID2,
+        acc.CARD_NO, ede2.DICTNAME 'status',acc.BALANCE,acc.DISCOUNT_RATE,cci.CUST_NAME,
+        cci.CUST_PHONE,sa.NAME,acc.CREATED_DATE,sa2.name as saname,ede1.DICTNAME 'cardType',
+        acc.IMP_FLAG,hb.BR_NAME,car.LICENSE_PLATE
+        FROM acct_cust_card acc
+        LEFT JOIN cust_cust_info cci
+        ON acc.`CUST_UUID`=cci.`CUST_UUID`
+        LEFT JOIN hr_branches hb
+        ON acc.BR_UUID = hb.BR_UUID
+        LEFT JOIN sys_account sa
+        ON acc.`SA_UUID`=sa.`ACCOUNT_ID`
+        LEFT JOIN cust_cust_owner cco
+        ON cci.`CUST_UUID`=cco.`CUST_UUID`
+        LEFT JOIN sys_account sa2
+        ON sa2.`ACCOUNT_ID`=cco.`SA_UUID`
+        LEFT JOIN cust_car_info car
+        ON car.CUST_UUID=cci.CUST_UUID
+        LEFT JOIN eos_dict_entry ede1
+        ON acc.CARD_TYPE=ede1.DICTID
+        LEFT JOIN eos_dict_entry ede2
+        ON acc.`STATUS`=ede2.DICTID
+        <where>
+            ede1.DICTTYPEID='DICT_ACCT_CARD_TYPE'
+            AND ede2.DICTTYPEID='DICT_CARD_STATUS'
+            AND acc.`BR_UUID`='ff80808151f8afb801521583513201b0'
+            AND cci.`CUST_UUID` IS NOT NULL
+            <if test="acc.licensePlate !=null and acc.licensePlate != ''">
+                and car.LICENSE_PLATE like concat('%', #{acc.licensePlate}, '%')
+            </if>
+            <if test="acc.custPhone != null and acc.custPhone != ''">
+                and cci.CUST_PHONE like concat('%', #{acc.custPhone}, '%')
+            </if>
+            <if test="acc.custName != null and acc.custName != ''">
+                and cci.CUST_NAME like concat('%', #{acc.custName}, '%')
+            </if>
+            <if test="acc.cardNo != null and acc.cardNo != ''">
+                and acc.CARD_NO like concat('%', #{acc.cardNo}, '%')
+            </if>
+            <if test="acc.accountId != null and acc.accountId != ''">
+                and sa.ACCOUNT_ID like concat('%', #{acc.accountId}, '%')
+            </if>
+            <if test="acc.accountId2 != null and acc.accountId2 != ''">
+                and sa2.ACCOUNT_ID like concat('%', #{acc.accountId2}, '%')
+            </if>
+            <if test="acc.impFlag != null and acc.impFlag != ''">
+                and acc.IMP_FLAG like concat('%', #{acc.impFlag}, '%')
+            </if>
+            <if test="acc.custUuid !=null and acc.custUuid != ''">
+                and cci.CUST_UUID =#{acc.custUuid}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryPhone" parameterType="com.xmz.br.vipCard.entity.vo.AcctCustCardQuery"
+            resultMap="accMap">
+        SELECT DISTINCT cci.CUST_UUID,acc.`CUST_CARD_UUID`,acc.`BR_UUID`,acc.CARD_NO ,
+        cci.CUST_NAME,car.LICENSE_PLATE ,cci.CUST_PHONE,
+        ede2.DICTNAME 'status',acc.`BALANCE`,acc.`CREATED_DATE`,sa2.name 'saname',
+        hb.BR_NAME,ede3.DICTNAME 'custLevel'
+        FROM acct_cust_card acc
+        LEFT JOIN cust_cust_info cci
+        ON acc.`CUST_UUID`=cci.`CUST_UUID`
+        LEFT JOIN hr_branches hb
+        ON acc.BR_UUID = hb.BR_UUID
+        LEFT JOIN sys_account sa
+        ON acc.`SA_UUID`=sa.`ACCOUNT_ID`
+        LEFT JOIN cust_cust_owner cco
+        ON cci.`CUST_UUID`=cco.`CUST_UUID`
+        LEFT JOIN sys_account sa2
+        ON sa2.`ACCOUNT_ID`=cco.`SA_UUID`
+        LEFT JOIN cust_car_info car
+        ON car.CUST_UUID=cci.CUST_UUID
+        LEFT JOIN eos_dict_entry ede1
+        ON acc.CARD_TYPE=ede1.DICTID
+        LEFT JOIN eos_dict_entry ede2
+        ON acc.`STATUS`=ede2.DICTID
+        LEFT JOIN eos_dict_entry ede3
+        ON cci.`CUST_LEVEL`=ede3.DICTID
+        <where>
+            ede1.DICTTYPEID='DICT_ACCT_CARD_TYPE'
+            AND ede2.DICTTYPEID='DICT_CARD_STATUS'
+            AND ede3.DICTTYPEID='DICT_CUST_TYPE'
+            AND acc.`BR_UUID`='ff80808151f8afb801521583513201b0'
+            AND ede2.DICTNAME='正常'
+            AND cci.CUST_PHONE IS NOT NULL
+            <if test="acc.cardNo != null and acc.cardNo != ''">
+                and acc.CARD_NO like concat('%', #{acc.cardNo}, '%')
+            </if>
+        </where>
+        GROUP BY acc.CARD_NO
+    </select>
+
+    <select id="myPage2" parameterType="com.xmz.br.vipCard.entity.vo.AcctCustCardQuery"
+            resultMap="accMap">
+        SELECT DISTINCT cci.CUST_UUID,acc.`CUST_CARD_UUID`,acc.`BR_UUID`,acc.CARD_NO ,
+        cci.CUST_NAME,car.LICENSE_PLATE ,cci.CUST_PHONE,
+        ede2.DICTNAME 'status',acc.`BALANCE`,acc.`CREATED_DATE`,sa2.name 'saname',
+        hb.BR_NAME,ede3.DICTNAME 'custLevel'
+        FROM acct_cust_card acc
+        LEFT JOIN cust_cust_info cci
+        ON acc.`CUST_UUID`=cci.`CUST_UUID`
+        LEFT JOIN hr_branches hb
+        ON acc.BR_UUID = hb.BR_UUID
+        LEFT JOIN sys_account sa
+        ON acc.`SA_UUID`=sa.`ACCOUNT_ID`
+        LEFT JOIN cust_cust_owner cco
+        ON cci.`CUST_UUID`=cco.`CUST_UUID`
+        LEFT JOIN sys_account sa2
+        ON sa2.`ACCOUNT_ID`=cco.`SA_UUID`
+        LEFT JOIN cust_car_info car
+        ON car.CUST_UUID=cci.CUST_UUID
+        LEFT JOIN eos_dict_entry ede1
+        ON acc.CARD_TYPE=ede1.DICTID
+        LEFT JOIN eos_dict_entry ede2
+        ON acc.`STATUS`=ede2.DICTID
+        LEFT JOIN eos_dict_entry ede3
+        ON cci.`CUST_LEVEL`=ede3.DICTID
+        <where>
+            ede1.DICTTYPEID='DICT_ACCT_CARD_TYPE'
+            AND ede2.DICTTYPEID='DICT_CARD_STATUS'
+            AND ede3.DICTTYPEID='DICT_CUST_TYPE'
+            AND acc.`BR_UUID`='ff80808151f8afb801521583513201b0'
+            AND ede2.DICTNAME='正常'
+            AND cci.CUST_PHONE IS NOT NULL
+            <if test="acc.custName != null and acc.custName != ''">
+                and cci.CUST_NAME like concat('%', #{acc.custName}, '%')
+            </if>
+            <if test="acc.custPhone != null and acc.custPhone != ''">
+                and cci.CUST_PHONE like concat('%', #{acc.custPhone}, '%')
+            </if>
+        </where>
+        group by cci.CUST_NAME
+    </select>
+
+</mapper>

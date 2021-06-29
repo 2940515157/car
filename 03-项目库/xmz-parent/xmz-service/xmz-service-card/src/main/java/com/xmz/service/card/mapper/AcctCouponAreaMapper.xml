@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctCouponAreaMapper">
+
+    <resultMap id="acardmap" type="com.xmz.service.card.entity.vo.MyAcctCouponArea">
+        <result column="typeName" property="typeName"></result>
+        <result column="orgName" property="orgName"></result>
+        <result column="brName" property="brName"></result>
+
+    </resultMap>
+
+    <select id="queryAllPage"  resultMap="acardmap">
+        SELECT
+	        CASE `CPA_TYPE`
+	            WHEN 'org' THEN ho.`ORG_NAME`
+	            WHEN 'br'  THEN hb.`BR_NAME`
+	        END `orgName`, `CPA_TYPE`'typeName',
+	        AC_UUID,ACA_UUID,ede1.DICTNAME 'brName'
+            FROM acct_coupon_area aca
+            LEFT JOIN hr_org ho ON aca.PK_UUID=ho.ORG_UUID
+            LEFT JOIN hr_branches hb ON aca.PK_UUID=hb.BR_UUID
+             INNER JOIN eos_dict_entry ede1 ON aca.CPA_TYPE=ede1.`DICTID`
+            WHERE AC_UUID=#{acUuid}
+            AND ede1.DICTTYPEID='DICT_USE_AREA'
+    </select>
+</mapper>

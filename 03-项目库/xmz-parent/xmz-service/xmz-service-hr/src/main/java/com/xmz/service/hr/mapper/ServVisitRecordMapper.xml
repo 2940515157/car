@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.hr.mapper.ServVisitRecordMapper">
+    <select id="myPage" parameterType="com.xmz.service.hr.entity.vo.ServVisitRecordQuery"
+            resultType="com.xmz.service.hr.entity.pojo.HuiFang">
+        SELECT VISIT_UUID,hb.BR_CODE,hb.BR_NAME,sr.CUST_NAME,sr.CUST_PHONE,sr.LICENSE_PLATE,sv.MAINT_POSITION,sr.TTL_AMT,sr.LAST_ARRIVE_DATE,sr.REV_NO,ha.AREA_NAME,ho.ORG_NAME FROM serv_visit_record AS sv
+                LEFT JOIN serv_receive_car AS sr ON sr.REV_UUID = sv.REV_UUID
+                LEFT JOIN hr_branches AS hb ON hb.BR_UUID = sv.BR_UUID
+                LEFT JOIN hr_area AS ha ON hb.AREA_UUID =ha.AREA_UUID
+                LEFT JOIN hr_org AS ho ON hb.ORG_UUID=ho.ORG_UUID
+        <where>
+            <if test="sr.orgUuid !=null and !sr.orgUuid.equals('')">
+                and ho.ORG_UUID = #{sr.orgUuid}
+            </if>
+            <if test="sr.areaUuid !=null and !sr.areaUuid.equals('')">
+                and ha.AREA_UUID = #{sr.areaUuid}
+            </if>
+            <if test="sr.brUuid !=null and !sr.brUuid.equals('')">
+                and hb.BR_UUID = #{sr.brUuid}
+            </if>
+        </where>
+    </select>
+    <select id="listAll"
+            resultType="com.xmz.service.hr.entity.pojo.HrOrg">
+        select ORG_UUID,ORG_NAME from hr_org
+        where IS_ACTIVE='Y'
+    </select>
+
+    <select id="arealistAll" parameterType="com.xmz.service.hr.entity.pojo.HrOrg"
+            resultType="com.xmz.service.hr.entity.pojo.HrArea">
+        SELECT AREA_UUID areaUuid,
+               AREA_NAME areaName
+        FROM hr_area
+       <where>
+           <if test="orgUuid !=null and orgUuid!=''">
+               and ORG_UUID=#{orgUuid}
+           </if>
+       </where>
+    </select>
+
+    <select id="brancheslistAll" parameterType="com.xmz.service.hr.entity.vo.HrBranchesQuery"
+            resultType="com.xmz.service.hr.entity.pojo.HrBranches">
+        SELECT BR_UUID brUuid,
+               BR_NAME brName
+        FROM hr_branches
+        <where>
+            <if test="orgUuid !=null and orgUuid!=''">
+                and ORG_UUID=#{orgUuid}
+            </if>
+            <if test="areaUuid !=null and areaUuid!=''">
+                and AREA_UUID=#{areaUuid}
+            </if>
+        </where>
+    </select>
+
+
+
+</mapper>

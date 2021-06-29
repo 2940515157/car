@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.serviceproduct.mapper.BaseServCatalogPartMapper">
+
+    <resultMap id="bscpMap" type="com.xmz.service.serviceproduct.entity.vo.MyBaseServCatalogPart">
+        <result column="bptName" property="bptName"></result>
+    </resultMap>
+   <!-- 根据服务项目id 分页查询出和配件对应的关系-->
+    <select id="queryByPart" parameterType="String" resultMap="bscpMap">
+        SELECT 	bpt.NAME 'bptName',bscp.* FROM base_serv_catalog_part bscp
+        INNER JOIN base_serv_catalog bsc ON bsc.CATALOG_UUID=bscp.CATALOG_UUID
+        INNER JOIN base_parts_type bpt ON bpt.PART_TYPE_UUID=bscp.PART_TYPE_UUID
+        where bscp.CATALOG_UUID=#{catalogUuid}
+
+    </select>
+</mapper>

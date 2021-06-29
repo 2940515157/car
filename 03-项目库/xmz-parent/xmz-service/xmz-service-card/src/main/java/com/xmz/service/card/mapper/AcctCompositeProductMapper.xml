@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctCompositeProductMapper">
+    <resultMap id="acompMap" type="com.xmz.service.card.entity.vo.MyAcctCompositeProduct">
+        <result column="statusName" property="statusName"></result>
+        <result column="bizTypeName" property="bizTypeName"></result>
+        <result column="serviceTypeName" property="serviceTypeName"></result>
+    </resultMap>
+    <!--套餐产品分页条件查询-->
+    <select id="queryAllPage" resultMap="acompMap">
+        SELECT ede1.`DICTNAME` 'statusName',ede2.`DICTNAME` 'bizTypeName',ede3.`DICTNAME` 'serviceTypeName',acp.* FROM acct_composite_product acp
+        INNER JOIN eos_dict_entry ede1 ON acp.STATUS=ede1.`DICTID`
+        INNER JOIN eos_dict_entry ede2 ON acp.BIZ_TYPE=ede2.`DICTID`
+        INNER JOIN eos_dict_entry ede3 ON acp.SERVICE_TYPE=ede3.`DICTID`
+
+        <where>
+            ede1.DICTTYPEID='DICT_PRODUCT_STATUS'
+            AND ede2.DICTTYPEID='DICT_PKG_BIZ_TYPE'
+            AND ede3.DICTTYPEID='DICT_PKG_MODULE_TYPE'
+
+            <if test="accp.acpName !=null and accp.acpName != ''">
+                AND acp.ACP_NAME like concat('%', #{accp.acpName}, '%')
+
+            </if>
+
+            <if test="accp.status !=null and accp.status != ''">
+                AND acp.STATUS =#{accp.status}
+            </if>
+
+        </where>
+
+    </select>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctPackageAreaMapper">
+
+    <resultMap id="acardmap" type="com.xmz.service.card.entity.vo.MyAcctPackageArea">
+        <result column="typeName" property="typeName"></result>
+        <result column="orgName" property="orgName"></result>
+        <result column="brName" property="brName"></result>
+
+    </resultMap>
+
+
+    <select id="queryAllPage" resultMap="acardmap">
+        SELECT
+	        CASE `APA_TYPE`
+	            WHEN 'org' THEN ho.`ORG_NAME`
+	            WHEN 'br'  THEN hb.`BR_NAME`
+	        END `orgName`, `APA_TYPE`'typeName',
+	        APA_UUID,PK_UUID,ede1.DICTNAME 'brName'
+            FROM acct_package_area apa
+            LEFT JOIN hr_org ho ON apa.PK_UUID=ho.ORG_UUID
+            LEFT JOIN hr_branches hb ON apa.PK_UUID=hb.BR_UUID
+             INNER JOIN eos_dict_entry ede1 ON apa.APA_TYPE=ede1.`DICTID`
+            WHERE AP_UUID=#{apUuid}
+            AND ede1.DICTTYPEID='DICT_USE_AREA'
+    </select>
+
+
+</mapper>

@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: brCrm
+server:
+  port: 9081
+
+# 自定义Swagger的参数
+my-feign:
+  # 微服务的标题
+  title: 基础数据（总店）微服务API文档
+  # 微服务的描述
+  description: 本文档描述了基础数据（总店）微服务接口定义
+  # Feign版本
+  version: 1.0
+  # 联系方式
+  contact:
+    name: 罗俊
+    url: http://www.KONGYU.com
+    email: kongyu111@123.com
+
+

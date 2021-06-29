@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.AcctBrCardMapper">
+
+    <select id="myPage" parameterType="com.xmz.br.vipCard.entity.vo.AcctBrCardQuery"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyAcctBrCard">
+        SELECT  abc.`CARD_NO`,
+        hb.EMP_NAME 'name',
+        EXTEND_UUID 'name2',
+        ede1.DICTNAME 'cardCompany',
+        IS_EXTEND,
+        ede2.DICTNAME 'brCardStatus',
+        abc.CREATED_DATE
+        FROM acct_br_card abc
+        LEFT JOIN hr_employees hb
+        ON abc.`SA_UUID`=hb.EMP_UUID
+        LEFT JOIN eos_dict_entry ede1
+        ON abc.CARD_COMPANY=ede1.DICTID
+        LEFT JOIN eos_dict_entry ede2
+        ON abc.BR_CARD_STATUS=ede2.DICTID
+        <where>
+            abc.BR_UUID='ff80808151f8afb801521583513201b0'
+            AND ede1.DICTTYPEID='DICT_CARD_COMPANY'
+            AND ede2.DICTTYPEID='DICT_BR_CARD_STATUS'
+            <if test="abc.cardNo !=null and abc.cardNo != ''">
+                and abc.CARD_NO like concat('%', #{abc.cardNo}, '%')
+            </if>
+            <if test="abc.saUuid != null and abc.saUuid != ''">
+                and abc.SA_UUID like concat('%', #{abc.saUuid}, '%')
+            </if>
+            <if test="abc.isExtend !=null and abc.isExtend != ''">
+                and abc.IS_EXTEND = #{abc.isExtend}
+            </if>
+            <if test="abc.empUuid !=null and abc.empUuid != ''">
+                and hb.emp_uuid = #{abc.empUuid}
+            </if>
+        </where>
+    </select>
+
+    <select id="listHe" resultType="com.xmz.br.vipCard.entity.pojo.HrEmployees">
+        SELECT emp_uuid,emp_name FROM hr_employees WHERE br_uuid='ff80808151f8afb801521583513201b0'
+    </select>
+
+    <select id="queryByCardNo" parameterType="com.xmz.br.vipCard.entity.vo.AcctBrCardQuery"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyAcctBrCard">
+        SELECT  abc.CARD_UUID,
+        hb.BR_UUID,
+        abc.`CARD_NO`,
+        hb.BR_NAME,
+        ede3.DICTNAME 'cardType'
+        FROM acct_br_card abc
+        LEFT JOIN sys_account sa
+        ON abc.`SA_UUID`=sa.account_id
+        LEFT JOIN sys_account sa2
+        ON abc.`EXTEND_UUID`=sa2.account_id
+        LEFT JOIN eos_dict_entry ede1
+        ON abc.CARD_COMPANY=ede1.DICTID
+        LEFT JOIN eos_dict_entry ede2
+        ON abc.BR_CARD_STATUS=ede2.DICTID
+        LEFT JOIN hr_branches hb
+        ON hb.BR_UUID=abc.`BR_UUID`
+        LEFT JOIN acct_card_store acs
+        ON acs.CARD_STORE_UUID=abc.`CARD_STORE_UUID`
+        LEFT JOIN eos_dict_entry ede3
+        ON acs.CARD_TYPE=ede3.DICTID
+        <where>
+            abc.BR_UUID='ff80808151f8afb801521583513201b0'
+            AND ede1.DICTTYPEID='DICT_CARD_COMPANY'
+            AND ede2.DICTTYPEID='DICT_BR_CARD_STATUS'
+            AND ede3.DICTTYPEID='DICT_ACCT_CARD_TYPE'
+            AND IS_EXTEND='N'
+            <if test="abc.cardNo !=null and abc.cardNo != ''">
+                and abc.CARD_NO like concat('%', #{abc.cardNo}, '%')
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

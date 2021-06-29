@@ -1,0 +1,3 @@
+"ACCOUNT_ID";"NAME";"TYPE";"STATUS";"PASSWORD";"LOGIN_NAME";"ORG_ID";"REMARK";"PROXY_ID";"ORI_PASSWORD";"LAST_LOGIN_TIME";"LAST_PASSWORD_TIME";"REF_ID";"LOGIN_IP";"IS_ACTIVE";"CREATED_DATE";"UPDATED_DATE";"CREATED_BY";"UPDATED_BY";"VERSION";"REF_TYPE";"TOKEN";"TOKEN_BEGIN_TIME";"TOKEN_END_TIME";"PASSWORD_INIT_FLAG";"PART_SHOW_MODE";"FIRST_SELECT_PART"
+"0d0dbf129e998d796b50ccbca1aa5358";"管理员";"admin";"normal";"123456";"Admin";"";"Admin";"";"";"2021-06-16 10:23:01";"";"";"";"";"";"";"";"";0.0;"";"";"";"";"N";"";""
+"cb32b42feb6fc9ddbd0ecfda5704b8bb";"KONG";"admin";"normal";"123456";"KONG";"";"管理员账号";"";"";"2021-06-16 10:03:53";"";"4028858279540fe3017988fc4b0a4f46";"";"";"";"";"";"";0.0;"";"";"";"";"N";"";""

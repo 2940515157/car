@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctCouponDetailMapper">
+
+    <resultMap id="acdMap" type="com.xmz.service.card.entity.vo.MyAcctCouponDetail">
+        <result property="catalogName" column="catalogName"></result>
+        <result property="servTypeName" column="servTypeName"></result>
+    </resultMap>
+
+   <!-- 根据卡券id 查询出优惠券服务明细-->
+    <select id="acdList" resultMap="acdMap">
+        SELECT bsc.CATALOG_NAME 'catalogName',bst.SERV_TYPE_NAME 'servTypeName',acd.* FROM acct_coupon_detail acd
+        INNER JOIN acct_coupon ac ON ac.AC_UUID=acd.AC_UUID
+        INNER JOIN base_serv_catalog bsc ON bsc.CATALOG_UUID=acd.CATALOG_UUID
+        INNER JOIN base_serv_type bst ON bst.ST_UUID=acd.ST_UUID
+        where acd.AC_UUID=#{acUuid}
+    </select>
+
+    <delete id="deleteAcUuid" parameterType="String">
+        delete from acct_coupon_detail where AC_UUID=#{acUuid}
+    </delete>
+
+</mapper>

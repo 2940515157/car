@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.card.mapper.AcctCouponPartsDetailMapper">
+
+    <resultMap id="acdMap" type="com.xmz.service.card.entity.vo.MyAcctCouponPartsDetail">
+        <result property="bptNAME" column="bptNAME"></result>
+        <result property="partName" column="partName"></result>
+    </resultMap>
+
+    <select id="acdList" resultMap="acdMap">
+        SELECT bpt.NAME 'bptNAME',bcps.PART_NAME 'partName',acpd.* FROM acct_coupon_parts_detail acpd
+        INNER JOIN acct_coupon ac ON ac.AC_UUID=acpd.AC_UUID
+        INNER JOIN base_car_parts_sku bcps ON bcps.PART_UUID=acpd.PART_UUID
+        INNER JOIN base_parts_type bpt ON bpt.PART_TYPE_UUID=acpd.PART_TYPE_UUID
+        WHERE acpd.AC_UUID=#{acUuid}
+    </select>
+</mapper>

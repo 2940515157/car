@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.br.vipCard.mapper.AcctRechargeRecordMapper">
+    <select id="myPage" parameterType="com.xmz.br.vipCard.entity.vo.AcctRechargeRecordQuery"
+            resultType="com.xmz.br.vipCard.entity.pojo.MyAcctRechargeRecord">
+        SELECT DISTINCT cci.CUST_UUID,acs.ACS_UUID,
+        arr.CARD_NO,cci.CUST_NAME,
+        cci.CUST_PHONE,acs.ACS_NAME,ede1.DICTNAME 'status',arr.RATE,
+        arr.TRUE_AMT,arr.AMOUNT,arr.CREATED_DATE,sa.name as 'name', arr.CLOSE_DATE
+        FROM acct_recharge_record arr
+        LEFT JOIN acct_cust_card acc
+        ON arr.CUST_CARD_UUID=acc.`CUST_CARD_UUID`
+        LEFT JOIN cust_cust_info cci
+        ON acc.`CUST_UUID`=cci.`CUST_UUID`
+        LEFT JOIN acct_card_setup acs
+        ON arr.PRODUCT_UUId=acs.ACS_UUID
+        LEFT JOIN sys_account sa
+        ON sa.`ACCOUNT_ID`=arr.CLOSE_SA_UUID
+        LEFT JOIN eos_dict_entry ede1
+        ON arr.status=ede1.DICTID
+        <where>
+            acc.`BR_UUID`='ff80808151f8afb801521583513201b0'
+            AND ede1.DICTTYPEID='DICT_REV_PAY_STAUTS'
+            <if test="arr.custName !=null and arr.custName != ''">
+                and cci.CUST_NAME like concat('%', #{arr.custName}, '%')
+            </if>
+            <if test="arr.custPhone != null and arr.custPhone != ''">
+                and cci.CUST_PHONE like concat('%', #{arr.custPhone}, '%')
+            </if>
+            <if test="arr.cardNo !=null and arr.cardNo != ''">
+                and arr.CARD_NO like concat('%', #{arr.cardNo}, '%')
+            </if>
+            <if test="arr.acsName !=null and arr.acsName != ''">
+                and acs.ACS_NAME like concat('%', #{arr.acsName}, '%')
+            </if>
+            <if test="arr.status !=null and arr.status != ''">
+                and ede1.DICTNAME=#{arr.status}
+            </if>
+        </where>
+    </select>
+</mapper>

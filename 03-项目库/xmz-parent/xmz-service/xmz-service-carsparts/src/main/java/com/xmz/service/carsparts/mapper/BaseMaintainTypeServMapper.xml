@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.carsparts.mapper.BaseMaintainTypeServMapper">
+    <select id="queryPage"  resultType="com.xmz.service.carsparts.entity.vo.MaintainTypeServCatalogBack">
+        SELECT bmts.MTS_UUID,ede.DICTNAME,bscb.CATALOG_CODE,bscb.CATALOG_NAME,bmts.REMARK FROM base_serv_catalog_back bscb
+        INNER JOIN base_maintain_type_serv bmts
+        ON bscb.CATALOG_UUID=bmts.CATALOG_UUID
+        INNER JOIN eos_dict_entry ede
+        ON bmts.MAINTAIN_TYPE=ede.DICTID
+        <where>
+            <if test="qp.maintainType!=null and qp.maintainType!=''">and bmts.MAINTAIN_TYPE=#{qp.maintainType}</if>
+            <if test="qp.catalogCode!=null and qp.catalogCode!=''">and bscb.CATALOG_CODE=#{qp.catalogCode}</if>
+            <if test="qp.catalogName!=null and qp.catalogName!=''">and bscb.CATALOG_NAME=#{qp.catalogName}</if>
+        </where>
+    </select>
+    <select id="queryselect" resultType="com.xmz.service.carsparts.entity.vo.MaintainTypeServCatalogBack">
+        SELECT ede.DICTNAME, ede.dictid  FROM base_maintain_type_serv bmts
+        INNER JOIN eos_dict_entry ede
+        ON bmts.MAINTAIN_TYPE=ede.DICTID
+        WHERE bmts.IS_ACTIVE='Y'
+    </select>
+</mapper>

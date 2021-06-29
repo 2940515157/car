@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.carsparts.mapper.BaseCarBrandMapper">
+<!--    <select id="queryQueryWei" parameterType="String"  resultType="com.xmz.service.carsparts.entity.pojo.BaseCarBrand">-->
+<!--        SELECT DISTINCT bcb.* FROM base_car_brand AS bcb-->
+<!--        INNER JOIN base_parts_type_brand AS bptb-->
+<!--        ON bcb.BRAND_UUID=bptb.BRAND_UUID-->
+<!--        INNER JOIN base_parts_type AS bpt-->
+<!--        ON bptb.PART_TYPE_UUID!=bpt.PART_TYPE_UUID-->
+<!--        WHERE bpt.PART_TYPE_UUID=#{bcid}-->
+<!--    </select>-->
+
+    <select id="queryQueryYi" parameterType="String"  resultType="com.xmz.service.carsparts.entity.pojo.BaseCarBrand">
+        SELECT DISTINCT bcb.* FROM base_car_brand AS bcb
+        INNER JOIN base_parts_type_brand AS bptb
+        ON bcb.BRAND_UUID=bptb.BRAND_UUID
+        INNER JOIN base_parts_type AS bpt
+        ON bptb.PART_TYPE_UUID=bpt.PART_TYPE_UUID
+        WHERE bpt.PART_TYPE_UUID=#{bcid}
+    </select>
+
+</mapper>

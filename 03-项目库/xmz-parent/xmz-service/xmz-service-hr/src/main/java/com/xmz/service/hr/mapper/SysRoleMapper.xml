@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.hr.mapper.SysRoleMapper">
+
+    <!-- 查出操作列 -->
+    <select id="listOper" resultType="map" parameterType="list">
+        SELECT
+            perm.OPERATION_ID 'operId' ,
+            perm.OPERATION_NAME 'operName'
+        FROM xmz_student.sys_permission perm
+        WHERE
+            perm.RESOURCE_ID in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+            AND perm.IS_ACTIVE = 'Y'
+        GROUP BY perm.OPERATION_ID
+        ORDER BY perm.OPERATION_ID ASC;
+    </select>
+
+    <select id="listPrs" resultType="map">
+        SELECT
+            prs.ROLE_PERMISSION_ID 'prs_ID',
+            perm.PERMISSION_ID 'perm_ID',
+            perm.RESOURCE_NAME 'res_name',
+            perm.OPERATION_ID 'oper_ID' ,
+            perm.OPERATION_NAME 'oper_name',
+            prs.IS_ACTIVE 'is_active',
+            perm.IS_ACTIVE 'is_show'
+        FROM xmz_student.sys_permission perm
+            LEFT JOIN (
+                SELECT
+                    nprs.ROLE_PERMISSION_ID,
+                    nprs.PERMISSION_ID,
+                    nprs.IS_ACTIVE
+                FROM xmz_student.sys_role_permission nprs
+                WHERE nprs.ROLE_ID = #{roleId}
+            ) prs ON perm.PERMISSION_ID = prs.PERMISSION_ID
+        WHERE
+            perm.RESOURCE_ID = #{resId}
+            AND perm.IS_ACTIVE = 'Y'
+        ORDER BY prs.ROLE_PERMISSION_ID  DESC
+    </select>
+
+</mapper>

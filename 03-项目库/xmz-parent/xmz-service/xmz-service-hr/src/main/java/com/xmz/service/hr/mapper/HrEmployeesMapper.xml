@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.hr.mapper.HrEmployeesMapper">
+    <select id="myPage" parameterType="com.xmz.service.hr.entity.vo.HrEmployeesQuery"
+            resultType="com.xmz.service.hr.entity.pojo.HrEmployeesAll">
+        SELECT	e.*,b.`BR_CODE`,b.`BR_NAME`,o.`ORG_NAME` FROM hr_employees e
+        LEFT JOIN hr_branches b ON e.`BR_UUID`=b.`BR_UUID`
+        LEFT JOIN hr_org o ON e.org_uuid=o.org_uuid
+        <where>
+            <if test="hre.empName !=null and hre.empName != ''">
+                and e.EMP_NAME like concat('%', #{hre.empName}, '%')
+            </if>
+            <if test="hre.empType !=null and hre.empType != ''">
+                and e.EMP_TYPE like concat('%', #{hre.empType}, '%')
+            </if>
+            <if test="hre.status !=null and hre.status != ''">
+                and e.STATUS like concat('%', #{hre.status}, '%')
+            </if>
+
+        </where>
+    </select>
+
+    <update id="setStatus" parameterType="com.xmz.service.hr.entity.pojo.HrEmployees">
+        update hr_employees set STATUS = #{em.status} where EMP_UUID = #{em.empUuid}
+    </update>
+
+    <select id="getIdsByBrIds" resultType="string" parameterType="string">
+        SELECT EMP_UUID
+        FROM xmz_student.hr_employees
+        WHERE BR_UUID IN
+            <foreach collection="brIds" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+
+    </select>
+
+
+    <!--查询所有门店的领卡人-->
+    <select id="queryName" parameterType="com.xmz.service.hr.entity.pojo.HrEmployees" resultType="com.xmz.service.hr.entity.pojo.HrEmployees">
+        select EMP_UUID,EMP_NAME from hr_employees
+        where BR_UUID=#{brUuid}
+    </select>
+
+
+</mapper>

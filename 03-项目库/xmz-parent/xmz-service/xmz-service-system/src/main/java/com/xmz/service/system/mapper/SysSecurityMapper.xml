@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.system.mapper.SysSecurityMapper">
+
+    <select id="getAccountByLogin" resultType="com.xmz.service.system.entity.vo.AccountInfo">
+        SELECT `ACCOUNT_ID` "id",
+               `NAME`       "name",
+               `STATUS`     "status"
+        FROM xmz_student.sys_account
+        WHERE LOGIN_NAME = #{username}
+          AND PASSWORD = #{password}
+    </select>
+
+
+    <select id="geAccountById" resultType="com.xmz.service.system.entity.vo.AccountInfo" parameterType="string">
+        SELECT `ACCOUNT_ID`         "id",
+               `NAME`               "name",
+               `LOGIN_NAME`         "loginName",
+               `LAST_LOGIN_TIME`    "loginTime",
+               `STATUS`             "status",
+               `PASSWORD_INIT_FLAG` "passwordInitFlag"
+        FROM xmz_student.sys_account
+        WHERE ACCOUNT_ID = #{id}
+    </select>
+
+    <update id="updateLoginTime" parameterType="string">
+        UPDATE xmz_student.sys_account
+        SET LAST_LOGIN_TIME = now()
+        WHERE ACCOUNT_ID = #{id}
+    </update>
+
+    <update id="updatePassword">
+        UPDATE xmz_student.sys_account
+        SET PASSWORD           = #{newPassword},
+            PASSWORD_INIT_FLAG = "N"
+        WHERE ACCOUNT_ID = #{id}
+          AND PASSWORD = ${oldPassword}
+    </update>
+
+    <!--    SELECT-->
+    <!--    RESOURCE_ID 'resourceId',-->
+    <!--    RESOURCE_NAME 'resourceName',-->
+    <!--    PARENT_ID 'parentId',-->
+    <!--    RESOURCE_NO 'resourceNo',-->
+    <!--    URL 'url',-->
+    <!--    IMG 'img'-->
+    <!--    FROM xmz_student.sys_resource-->
+    <!--    WHERE RESOURCE_ORIGIN = #{origin}-->
+    <!--    ORDER BY PARENT_ID ASC,TREE_SEQ-->
+    <select id="listResInfoMap" resultType="map">
+        SELECT RESOURCE_ID 'resourceId', RESOURCE_NAME 'resourceName', PARENT_ID 'parentId', RESOURCE_NO 'resourceNo', URL 'url', IMG 'img', CONCAT(TREE_SEQ) 'treeSeq'
+        FROM xmz_student.sys_resource
+        WHERE RESOURCE_ORIGIN = #{origin}
+          AND (RESOURCE_ID IN (
+            SELECT RESOURCE_ID
+            FROM xmz_student.sys_permission
+            WHERE PERMISSION_ID IN (
+                SELECT PERMISSION_ID 'permId'
+                FROM xmz_student.sys_role_permission
+                WHERE ROLE_ID IN (
+                    SELECT ROLE_ID 'roleID'
+                    FROM xmz_student.sys_account_role
+                    WHERE ACCOUNT_ID = #{accountId}
+                )
+                  AND IS_ACTIVE = 'Y'
+            )
+              AND IS_ACTIVE = 'Y'
+            GROUP BY RESOURCE_ID
+        ))
+          AND IS_SHOW = 1
+        ORDER BY PARENT_ID ASC, TREE_SEQ
+    </select>
+
+    <select id="getBtnCode" resultType="String">
+        SELECT po.OPERATION_NO
+        FROM xmz_student.sys_role_permission rp
+                 INNER JOIN (SELECT ROLE_ID
+                             FROM xmz_student.sys_account_role
+                             WHERE ACCOUNT_ID = #{acctId}
+                               AND IS_ACTIVE = 'Y') ar ON ar.ROLE_ID = rp.ROLE_ID
+                 INNER JOIN (SELECT perm.PERMISSION_ID, opers.OPERATION_NO
+                             FROM xmz_student.sys_permission perm
+                                      INNER JOIN (SELECT RESOURCE_ID
+                                                  FROM xmz_student.sys_resource
+                                                  WHERE RESOURCE_ID = #{resId}
+                                                    AND IS_SHOW = 1) resIds ON resIds.RESOURCE_ID = perm.RESOURCE_ID
+                                      INNER JOIN (SELECT OPERATION_ID, OPERATION_NO
+                                                  FROM xmz_student.sys_operation
+                                                  WHERE IS_ACTIVE = 'Y') opers ON opers.OPERATION_ID = perm.OPERATION_ID
+                             WHERE perm.IS_ACTIVE = 'Y'
+        ) po ON po.PERMISSION_ID = rp.PERMISSION_ID
+        WHERE IS_ACTIVE = 'Y'
+    </select>
+
+</mapper>

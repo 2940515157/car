@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.hr.mapper.HrOrgMapper">
+
+   <!-- 分页查询全部-->
+    <select id="queryAllPage" resultType="com.xmz.service.hr.entity.pojo.HrOrg">
+        select * from hr_org where
+        PARENT_UUID='000000004e4c85a5014e4d8a693e0138'
+    </select>
+
+  <!--  查询所有营运中心的部门-->
+    <select id="queryAllYingYun" parameterType="String" resultType="com.xmz.service.hr.entity.pojo.HrOrg">
+        SELECT ORG_UUID ,ORG_NAME FROM  hr_org
+        <where>
+            PARENT_UUID='000000004e4c85a5014e4d8a693e0138'
+            <if test="orgUuid !=null and orgUuid != ''">
+                AND ORG_UUID=#{orgUuid}
+            </if>
+        </where>
+
+    </select>
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmz.service.carsparts.mapper.BasePartsTypeMapper">
+
+    <select id="carTypeFuTree" resultType="com.xmz.service.carsparts.entity.pojo.BasePartsType">
+        SELECT * FROM base_parts_type WHERE ISNULL(PARENT_TYPE_UUID)
+    </select>
+
+    <select id="carTypeZiTree" parameterType="String"  resultType="com.xmz.service.carsparts.entity.pojo.BasePartsType">
+        SELECT * FROM base_parts_type
+        <where>
+            PARENT_TYPE_UUID=#{parentTypeUuid}
+        </where>
+    </select>
+
+    <select id="queryQuery" parameterType="com.xmz.service.carsparts.entity.vo.BasePartsTypeQuery"  resultType="com.xmz.service.carsparts.entity.pojo.BasePartsType">
+        SELECT * FROM base_parts_type
+        <where>
+            <if test="bptc.parentTypeUuid !=null and bptc.parentTypeUuid != ''">
+                and base_parts_type.PART_TYPE_UUID=#{bptc.parentTypeUuid}
+                or base_parts_type.PARENT_TYPE_UUID=#{bptc.parentTypeUuid}
+            </if>
+            <if test="bptc.name !=null and bptc.name != ''">
+                and base_parts_type.NAME like concat('%', #{bptc.name}, '%')
+            </if>
+            <if test="bptc.alias1 !=null and bptc.alias1 != ''">
+                and base_parts_type.ALIAS1 like concat('%', #{bptc.alias1}, '%')
+            </if>
+            <if test="bptc.alias2 !=null and bptc.alias2 != ''">
+                and base_parts_type.ALIAS2 like concat('%', #{bptc.alias2}, '%')
+            </if>
+            <if test="bptc.alias3 !=null and bptc.alias3 != ''">
+                and base_parts_type.ALIAS3 like concat('%', #{bptc.alias3}, '%')
+            </if>
+            <if test="bptc.alias4 !=null and bptc.alias4 != ''">
+                and base_parts_type.ALIAS4 like concat('%', #{bptc.alias4}, '%')
+            </if>
+            <if test="bptc.alias5 !=null and bptc.alias5 != ''">
+                and base_parts_type.ALIAS5 like concat('%', #{bptc.alias5}, '%')
+            </if>
+            <if test="bptc.dataMtType !=null and bptc.dataMtType != ''">
+                and base_parts_type.DATA_MT_TYPE=#{bptc.dataMtType}
+            </if>
+            <if test="bptc.isCommon !=null and bptc.isCommon != ''">
+                and base_parts_type.IS_COMMON=#{bptc.isCommon}
+            </if>
+            <if test="bptc.matchType !=null and bptc.matchType != ''">
+                and base_parts_type.MATCH_TYPE=#{bptc.matchType}
+            </if>
+            <if test="bptc.servType !=null and bptc.servType != ''">
+                and base_parts_type.SERV_TYPE=#{bptc.servType}
+            </if>
+            <if test="bptc.usableFlag !=null and bptc.usableFlag != ''">
+                and base_parts_type.USABLE_FLAG=#{bptc.usableFlag}
+            </if>
+        </where>
+    </select>
+</mapper>
